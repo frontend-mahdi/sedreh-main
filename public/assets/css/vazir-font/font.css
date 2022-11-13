@@ -1,0 +1,68 @@
+@font-face {
+  font-family: Lalezar;
+  src: url("../Lalezar-Font/Lalezar-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: Vazir;
+  src: url("Vazir-Thin-FD-UI.eot");
+  src: url("Vazir-Thin-FD-UI.eot?#iefix") format("embedded-opentype"),
+    url("Vazir-Thin-FD-UI.woff2") format("woff2"),
+    url("Vazir-Thin-FD-UI.woff") format("woff"),
+    url("Vazir-Thin-FD-UI.ttf") format("truetype");
+  font-weight: 200;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: Vazir;
+  src: url("Vazir-Light-FD-UI.eot");
+  src: url("Vazir-Light-FD-UI.eot?#iefix") format("embedded-opentype"),
+    url("Vazir-Light-FD-UI.woff2") format("woff2"),
+    url("Vazir-Light-FD-UI.woff") format("woff"),
+    url("Vazir-Light-FD-UI.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: Vazir;
+  src: url("Vazir-Regular-FD-UI.eot");
+  src: url("Vazir-Regular-FD-UI.eot?#iefix") format("embedded-opentype"),
+    url("Vazir-Regular-FD-UI.woff2") format("woff2"),
+    url("Vazir-Regular-FD-UI.woff") format("woff"),
+    url("Vazir-Regular-FD-UI.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: Vazir;
+  src: url("Vazir-Medium-FD-UI.eot");
+  src: url("Vazir-Medium-FD-UI.eot?#iefix") format("embedded-opentype"),
+    url("Vazir-Medium-FD-UI.woff2") format("woff2"),
+    url("Vazir-Medium-FD-UI.woff") format("woff"),
+    url("Vazir-Medium-FD-UI.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: Vazir;
+  src: url("Vazir-Bold-FD-UI.eot");
+  src: url("Vazir-Bold-FD-UI.eot?#iefix") format("embedded-opentype"),
+    url("Vazir-Bold-FD-UI.woff2") format("woff2"),
+    url("Vazir-Bold-FD-UI.woff") format("woff"),
+    url("Vazir-Bold-FD-UI.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: Vazir;
+  src: url("Vazir-Black-FD-UI.eot");
+  src: url("Vazir-Black-FD-UI.eot?#iefix") format("embedded-opentype"),
+    url("Vazir-Black-FD-UI.woff2") format("woff2"),
+    url("Vazir-Black-FD-UI.woff") format("woff"),
+    url("Vazir-Black-FD-UI.ttf") format("truetype");
+  font-weight: 900;
+  font-style: normal;
+}

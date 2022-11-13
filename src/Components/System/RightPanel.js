@@ -18,7 +18,8 @@ import FirstButton from "./FirstButton";
 import SecondButton from "./SecondButton";
 import ThirdButton from "./ThirdButton";
 import FourthButton from "./FourthButton";
-
+// custom hook
+import useTimeDate from "./TimeDate";
 let options = { year: "numeric", month: "long", day: "numeric" };
 let today = new Date().toLocaleDateString("fa-IR", options);
 
@@ -48,6 +49,8 @@ export default function RightPanel() {
   const polygonTitle = useSelector((state) => state.map.polygonTitle);
 
   const [showPopup, setShowPopup] = useState(false);
+
+  const [{ date, time }] = useTimeDate();
   const dispatch = useDispatch();
   useEffect(() => {
     if (!!!!titlePolygon && typeof titlePolygon == "string") {
@@ -245,11 +248,20 @@ export default function RightPanel() {
           </button>
         </div>
         <div className="absolute bottom-0">
-          <p className="mb-10 flex justify-center items-center mr-2" dir="rtl">
-            {new Date().getHours()}:{new Date().getMinutes()}
-            <br></br>
-            {today}
-          </p>
+          <div className="mb-5 text-center " dir="rtl">
+            {/* <p className="m_time"> */}
+
+            {/* {new Date().toLocaleString("fa-IR-u-nu-latn", {
+                hour: "numeric",
+                minute: "numeric",
+                hour12: false,
+              })} */}
+            {/* {new Date().getHours()}:{new Date().getMinutes()} */}
+            {/* </p> */}
+
+            <p className="font-bold text-primaryfour bg-white">{time}</p>
+            <p className="px-2 pt-2">{date}</p>
+          </div>
         </div>
         {showPopup && (
           <button onClick={removeImage} className="saq">
