@@ -166,50 +166,7 @@ export default function Mapbox() {
       </div>
     );
   };
-  {
-    /* @mahdi: 
-      اولین کاری که میکنید اینکه ساختار پوشه های پروژه رو درست میکنید به این صورت
-      *-components/
-         -common/کامپوننت هایی که داخل پروژه مشترک هستند
-            -cards/
-            -buttons/
-            .
-            .
-            .
-         -rightPanel/قسمت های داخل پنل به تفکیک هریک کامپوننت مجزا شوند
-           item1.jsx اسم دلخواه
-           .
-           .
-           .
-         -navbar/
-         -map/
-           Map.jsx
-           -features/ابزارهای روی نقشه و یا هرچیزی که مربوط به نقشه هست
 
-      *-redux/فایلای مربوط به ریداکس
-      *-helper/توابع به تفکیک کاربرد هر یک در دسته مشخص
-        -api/
-        -map/
-          calcCenter.js
-        .
-        .
-        .
-      *-assets/
-        -images/
-        
-      */
-  }
-  {
-    /* @mahdi: 
-      کلیه فایلای استایل جانبی و فونت داخل این پوشه
-       -public/
-         -assets/
-           -fonts/
-           -css/
-           -js/
-           
-      */
-  }
   useEffect(() => {
     if (polygonLoading) {
       setLayerLoading(true);
@@ -234,25 +191,7 @@ export default function Mapbox() {
   useEffect(() => {
     console.log("urlLayer", urlLayer);
   }, [urlLayer]);
-  // useEffect(() => {
-  //   console.log(savedPolyOnMap, "savedPolyOnMap");
-  //   if (savedPolyOnMap.geometry) {
-  //     console.log(
-  //       "savedPolyOnMap.geometry.coordinates[0][0]",
-  //       "savedPolyOnMap.geometry.coordinates[0][2]",
-  //       savedPolyOnMap.geometry.coordinates[0][0],
-  //       savedPolyOnMap.geometry.coordinates[0][2]
-  //     );
-  //     setMode(
-  //       new DrawRectangleMode(
-  //         savedPolyOnMap.geometry.coordinates[0][0],
-  //         savedPolyOnMap.geometry.coordinates[0][1]
-  //       )
-  //     );
-  //   }
-  // }, [savedPolyOnMap]);
 
-  // dispatch(getUrlCompare(urlLayer));
   useEffect(() => {
     console.log("polygonAdded", polygonAdded);
   }, [polygonAdded]);
@@ -276,7 +215,7 @@ export default function Mapbox() {
           mapboxApiAccessToken={
             "pk.eyJ1IjoiZmFrZXVzZXJnaXRodWIiLCJhIjoiY2pwOGlneGI4MDNnaDN1c2J0eW5zb2ZiNyJ9.mALv0tCpbYUPtzT7YysA2g"
           }
-          placeholder="مکان مورد نظر خود ار پیدا کنید ..."
+          placeholder="مکان مورد نظر خود را پیدا کنید..."
           position="top-left"
         />
         <FullscreenControl style={fullStyle} className="xyz" />
