@@ -57,10 +57,24 @@ button:focus {
     font-size: 15px;
   }
 }
-.mapbox {
+/* .mapbox {
   cursor: auto !important;
-}
-
+} */
+/* .mapboxgl-ctrl-group button.mapboxgl-ctrl-compass {
+  cursor: pointer !important;
+} */
+/* .mapboxgl-map {
+  cursor: pointer !important;
+} */
+/* .mapboxgl-canvas-container.mapboxgl-interactive,
+.mapboxgl-ctrl-group button.mapboxgl-ctrl-compass {
+  cursor: -webkit-pointer !important;
+  cursor: -moz-pointer !important;
+  cursor: pointer !important;
+} */
+/* div.overlays {
+  cursor: pointer;
+} */
 span.rc-time-picker.ignore--click--outside {
   display: none;
 }

@@ -49,7 +49,7 @@ export default function RightPanel() {
   const polygonTitle = useSelector((state) => state.map.polygonTitle);
 
   const [showPopup, setShowPopup] = useState(false);
-
+  // custom hooks
   const [{ date, time }] = useTimeDate();
   const dispatch = useDispatch();
   useEffect(() => {
@@ -259,7 +259,7 @@ export default function RightPanel() {
             {/* {new Date().getHours()}:{new Date().getMinutes()} */}
             {/* </p> */}
 
-            <p className="font-bold text-primaryfour bg-white">{time}</p>
+            <p className="font-medium text-white bg-gray-background">{time}</p>
             <p className="px-2 pt-2">{date}</p>
           </div>
         </div>

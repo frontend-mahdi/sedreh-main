@@ -88,14 +88,17 @@ export default function Mapbox() {
   useEffect(() => {
     if (polygonAdded) {
       setMode(new EditingMode());
+      changeCursor("none");
     }
   }, [polygonAdded]);
   const onUpdate = (payload) => {
     setClearMap(false);
 
     console.log("onUpdate payload", payload);
-    setIsShown(true);
-    setPolygonAdded(true);
+    if (payload.data[0].geometry.type == "Polygon") {
+      setIsShown(true);
+      setPolygonAdded(true);
+    }
 
     if (
       payload.editType == "addFeature" ||
@@ -116,6 +119,7 @@ export default function Mapbox() {
   const onDelete = () => {
     console.log("onDelete");
     setPolygonAdded(false);
+    changeCursor("none");
     setIsShown(false);
     setClearMap(true);
     console.log("editorRef.current", editorRef.current);
@@ -133,9 +137,15 @@ export default function Mapbox() {
     console.log("polygonAdded", polygonAdded);
     if (!polygonAdded) {
       setMode(new DrawRectangleMode());
+      changeCursor("add");
     } else {
       setMode(new EditingMode());
+      changeCursor("none");
     }
+  };
+  const drawPoint = () => {
+    changeCursor("add");
+    setMode(new DrawPointMode());
   };
   const renderDrawTools = () => {
     return (
@@ -155,7 +165,8 @@ export default function Mapbox() {
           <button
             className="mapbox-gl-draw_ctrl-draw-btn mapbox-gl-draw_point "
             title="Point tool"
-            onClick={() => setMode(new DrawPointMode())}
+            // onClick={() => setMode(new DrawPointMode())}
+            onClick={drawPoint}
           />
           <button
             className="mapbox-gl-draw_ctrl-draw-btn mapbox-gl-draw_trash"
@@ -195,11 +206,16 @@ export default function Mapbox() {
   useEffect(() => {
     console.log("polygonAdded", polygonAdded);
   }, [polygonAdded]);
-
+  const changeCursor = (state) => {
+    const layer = document.querySelector("div.overlays");
+    if (state == "add") layer.classList.add("cursor-pointer");
+    else layer.classList.remove("cursor-pointer");
+  };
   return (
     <div>
       <ReactMapGL
         {...viewport}
+        style={{ cursor: "pointer" }}
         ref={mapRef}
         mapStyle={mapStyle}
         mapboxApiAccessToken="pk.eyJ1IjoiZmFrZXVzZXJnaXRodWIiLCJhIjoiY2pwOGlneGI4MDNnaDN1c2J0eW5zb2ZiNyJ9.mALv0tCpbYUPtzT7YysA2g"
@@ -220,7 +236,7 @@ export default function Mapbox() {
         />
         <FullscreenControl style={fullStyle} className="xyz" />
         {layerLoading ? <CommonLoading color="#95DD91" /> : null}
-        <div className="nav " style={navStyle}>
+        <div className="nav" style={navStyle}>
           <NavigationControl
             onViewportChange={(nextViewport) => setViewport(nextViewport)}
           />
