@@ -2,7 +2,10 @@
   font-family: "vazir";
   src: local("vazir"), url(./fonts/Vazir.ttf) format("truetype");
 } */
-
+html {
+  overflow-y: hidden;
+  overflow-x: hidden;
+}
 body {
   margin: 0px;
   font-family: Vazir;
