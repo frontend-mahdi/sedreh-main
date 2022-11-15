@@ -27,7 +27,8 @@ import {
 import SavePolygon from "./SavePolygon";
 import { useSelector } from "react-redux";
 import { CommonLoading } from "react-loadingg";
-
+import { FaTimes } from "react-icons/fa";
+import CloseLayerPopup from "./CloseLayerPopup";
 setRTLTextPlugin(
   "https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-rtl-text/v0.2.3/mapbox-gl-rtl-text.js"
 );
@@ -52,12 +53,13 @@ const locateStyle = {
 };
 
 export default function Mapbox() {
-  const titlePolygon = useSelector((state) => state.map.titlePolygon);
+  const selectedLayer = useSelector((state) => state.map.titlePolygon);
   const polygonLoading = useSelector((state) => state.map.titlePolygonLoading);
   const polygon = useSelector((state) => state.map.polygon);
   const savedPolyOnMap = useSelector((state) => state.map.savedPolyOnMap);
   // console.log(titlePolygon);
-
+  // const selectedLayerLat = +selectedLayer?.center[1];
+  // const selectedLayerLon = +selectedLayer?.center[0];
   const [viewport, setViewport] = useState({
     width: "100vw",
     height: "100vh",
@@ -81,7 +83,15 @@ export default function Mapbox() {
   const mapRef = useRef();
   const editorRef = useRef();
   const dispatch = useDispatch();
-
+  useEffect(() => {
+    if (selectedLayer?.center?.length > 0) {
+      setViewport({
+        ...viewport,
+        latitude: +selectedLayer?.center[1] || 35.689198,
+        longitude: +selectedLayer?.center[0] || 51.388973,
+      });
+    }
+  }, [selectedLayer]);
   useEffect(() => {
     console.log("polygon", polygon);
   }, [polygon]);
@@ -187,9 +197,10 @@ export default function Mapbox() {
   }, [polygonLoading]);
 
   useEffect(() => {
-    if (!!!!titlePolygon && typeof titlePolygon == "string") {
+    const layerName = selectedLayer.layerName;
+    if (!!!!layerName && typeof layerName == "string") {
       console.log("useEffect");
-      const layerCode = titlePolygon.slice(7);
+      const layerCode = layerName.slice(7);
       const url = `http://138.201.167.227:8080/geoserver/sedreh/wms?service=WMS&version=1.1.0&request=GetMap&layers=sedreh%3A${layerCode}&bbox={bbox-epsg-3857}&width=672&height=768&srs=EPSG:3857&transparent=true&styles=&format=image%2Fpng`;
       setUrlLayer(url);
       // setUpdate(Math.random());
@@ -198,7 +209,7 @@ export default function Mapbox() {
       console.log("useEffect clean up");
       setUrlLayer("");
     };
-  }, [titlePolygon]);
+  }, [selectedLayer]);
   useEffect(() => {
     console.log("urlLayer", urlLayer);
   }, [urlLayer]);
@@ -241,7 +252,7 @@ export default function Mapbox() {
             onViewportChange={(nextViewport) => setViewport(nextViewport)}
           />
         </div>
-        {titlePolygon ? () => showImage(titlePolygon) : null}
+        {/* {titlePolygon ? () => showImage(titlePolygon) : null} */}
         <Editor
           style={{ width: "100%", height: "100%" }}
           ref={editorRef}
@@ -253,7 +264,32 @@ export default function Mapbox() {
           editHandleShape={"circle"}
         />
         {renderDrawTools()}
-
+        {/* <div style={{ position: "absolute", zIndex: "9999" }}>
+          <button>
+            <div className="bg-black-rgba w-20 h-11 flex justify-center rounded-xl">
+              <div className="flex justify-center items-center">
+                <button className="text-gray w-8 flex justify-center items-center">
+                  بستن
+                </button>
+              </div>
+            </div>
+          </button>
+        </div> */}
+        {/* <div className="mapboxgl-ctrl-bottom-right">
+          <div
+            className="mr-[48vw] mb-8 bg-black px-4 py-2 rounded-sm text-white cursor-pointer"
+            style={{ userSelect: "element" }}
+          >
+            <FaTimes
+              className="inline "
+              onClick={() => console.log("clicked")}
+            />
+            <button className="inline mx-2">بستن تصویر</button>
+          </div>
+        </div> */}
+        {!!!!selectedLayer.layerName && (
+          <CloseLayerPopup data={selectedLayer} />
+        )}
         {urlLayer.length > 0 && (
           <Source
             id="wms-test-source2"

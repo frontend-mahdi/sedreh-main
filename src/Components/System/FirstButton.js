@@ -21,7 +21,7 @@ import squaresave from "../../Images/square.png";
 import save from "../../Images/save.png";
 import pic from "../../Images/pic.png";
 
-export default function FirstButton() {
+export default function FirstButton({ closeTabs }) {
   const dispatch = useDispatch();
   const [centerPolyg, setCenterPolyg] = useState("");
 
@@ -63,12 +63,12 @@ export default function FirstButton() {
       });
   };
 
-  const buttonClicked2 = function (name, side) {
+  const fetchAndShowImageHandler = function (element, side) {
     dispatch(getPolygonLoading(true));
     fetch("http://138.201.167.227/api/get-image/", {
       method: "POST",
       body: JSON.stringify({
-        image_name: name,
+        image_name: element.name,
         geom: {
           type: "FeatureCollection",
           features: [JSON.parse(window.localStorage.getItem("currentPolygon"))],
@@ -81,7 +81,7 @@ export default function FirstButton() {
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-        dispatch(getPolygonTitle(data));
+        dispatch(getPolygonTitle({ layerName: data, ...element }));
         if (side == "left") {
           dispatch(getPolygonTitleLeft(data));
         } else if (side == "right") {
@@ -201,7 +201,8 @@ export default function FirstButton() {
                               title="نمایش تصویر"
                               onClick={() => {
                                 removeImage();
-                                buttonClicked2(element.name);
+                                fetchAndShowImageHandler(element);
+                                closeTabs();
                               }}
                             >
                               <SlPicture />
@@ -262,7 +263,10 @@ export default function FirstButton() {
                 <div className="flex gap-2">
                   <RightPopup title="ذخیره" source={squaresave} data={todo} />
                   <RightPopup
-                    onClick={() => buttonClicked2(todo.name)}
+                    onClick={() => {
+                      fetchAndShowImageHandler(todo);
+                      closeTabs();
+                    }}
                     title="ذخیره و نمایش"
                     source={save}
                     data={todo}

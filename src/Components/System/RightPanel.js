@@ -45,7 +45,7 @@ export default function RightPanel() {
   const polygon = useSelector((state) => state?.map?.polygon);
   const _saveImages = useSelector((state) => state.menu.saveImages);
   const fetchedImages = useSelector((state) => state.menu.fetchedImages);
-  const titlePolygon = useSelector((state) => state.map?.titlePolygon);
+  const selectedLayer = useSelector((state) => state.map?.titlePolygon);
   const polygonTitle = useSelector((state) => state.map.polygonTitle);
 
   const [showPopup, setShowPopup] = useState(false);
@@ -53,10 +53,11 @@ export default function RightPanel() {
   const [{ date, time }] = useTimeDate();
   const dispatch = useDispatch();
   useEffect(() => {
-    if (!!!!titlePolygon && typeof titlePolygon == "string") {
+    const layerName = selectedLayer.layerName;
+    if (!!!!layerName && typeof layerName == "string") {
       setShowPopup(true);
     }
-  }, [titlePolygon]);
+  }, [selectedLayer]);
   useEffect(() => {}, [fetchedImages]);
   useEffect(() => {
     if (_saveImages.length > 0) {
@@ -146,6 +147,10 @@ export default function RightPanel() {
         }
         break;
       default:
+        setIsShownFirst(false);
+        setIsShownSecond(false);
+        setIsShownThird(false);
+        setIsShownFourth(false);
         break;
     }
   };
@@ -178,9 +183,7 @@ export default function RightPanel() {
   // const setShape = (shape) => {
   //   dispatch(setPolyOnMap(shape));
   // };
-  const removeImage = () => {
-    dispatch(getPolygonTitle(""));
-  };
+
   // const setCenter = (centerPolyg) => {
   //   dispatch(getTotalMiddlePolygon(centerPolyg));
   // };
@@ -263,8 +266,8 @@ export default function RightPanel() {
             <p className="px-2 pt-2">{date}</p>
           </div>
         </div>
-        {showPopup && (
-          <button onClick={removeImage} className="saq">
+        {/* {showPopup && (
+          <button onClick={removeImage}>
             <div className="bg-black-rgba w-20 h-11 flex justify-center rounded-xl">
               <div className="flex justify-center items-center">
                 <button className="text-gray w-8 flex justify-center items-center">
@@ -273,16 +276,16 @@ export default function RightPanel() {
               </div>
             </div>
           </button>
-        )}
+        )} */}
       </div>
 
       {(isShownFirst || isShownSecond || isShownThird || isShownFourth) && (
         <div className="right-system bg-black-rgba fixed right-14 w-80 h-580 text-gray items-center rounded-l-2xl gap-10 flex flex-col z-10 justify-start mt-28">
           <div className="w-full h-full rounded-l-2xl">
-            {isShownFirst && <FirstButton />}
-            {isShownSecond && <SecondButton />}
-            {isShownThird && <ThirdButton />}
-            {isShownFourth && <FourthButton />}
+            {isShownFirst && <FirstButton closeTabs={menuItemShowHandler} />}
+            {isShownSecond && <SecondButton closeTabs={menuItemShowHandler} />}
+            {isShownThird && <ThirdButton closeTabs={menuItemShowHandler} />}
+            {isShownFourth && <FourthButton closeTabs={menuItemShowHandler} />}
           </div>
         </div>
       )}

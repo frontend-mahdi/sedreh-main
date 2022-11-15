@@ -117,12 +117,12 @@ export default function ThirdButton() {
     }
   }, [polygon]);
 
-  const buttonClicked2 = function (name, side) {
+  const fetchAndShowImage = function (element, side) {
     dispatch(getPolygonLoading(true));
     fetch("http://138.201.167.227/api/get-image/", {
       method: "POST",
       body: JSON.stringify({
-        image_name: name,
+        image_name: element.name,
         geom: {
           type: "FeatureCollection",
           features: [JSON.parse(window.localStorage.getItem("currentPolygon"))],
@@ -135,7 +135,8 @@ export default function ThirdButton() {
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-        dispatch(getPolygonTitle(data));
+        dispatch(getPolygonTitle({ layerName: data, ...element }));
+
         if (side == "left") {
           dispatch(getPolygonTitleLeft(data));
         } else if (side == "right") {
@@ -171,7 +172,7 @@ export default function ThirdButton() {
                         </p>
                         <button
                           onClick={() => {
-                            buttonClicked2(element.name, "left");
+                            fetchAndShowImage(element, "left");
                             setCenter(element.center);
                           }}
                         >
@@ -222,7 +223,7 @@ export default function ThirdButton() {
                         </p>
                         <button
                           onClick={() => {
-                            buttonClicked2(element.name, "right");
+                            fetchAndShowImage(element, "right");
                             setCenter(element.center);
                           }}
                         >
