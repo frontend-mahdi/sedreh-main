@@ -2,11 +2,13 @@ import React from "react";
 import Popup from "reactjs-popup";
 import "reactjs-popup/dist/index.css";
 import { getPolygonTitle } from "../../features/counter/map";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { FaTimes } from "react-icons/fa";
 
 export default function CloseLayerPopup(props) {
   const dispatch = useDispatch();
+  const savedImageTitle = useSelector((state) => state.menu.stagedSavedImage);
+
   const { id, layerName, title, center, date, saved, name } = props.data;
 
   const removeImage = () => {
@@ -52,7 +54,9 @@ export default function CloseLayerPopup(props) {
             <p className="cursor-default  px-auto">{date}</p>
           </div>
           <div className=" text-center  ">
-            <p className="cursor-default  px-auto">{title}</p>
+            <p className="cursor-default  px-auto">
+              {title || savedImageTitle}
+            </p>
           </div>
           <div className=" text-center  ">
             <p className="cursor-default  px-auto">تصویر شماره {id}</p>

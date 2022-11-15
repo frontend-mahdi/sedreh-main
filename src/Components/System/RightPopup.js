@@ -2,7 +2,10 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import Popup from "reactjs-popup";
 import "reactjs-popup/dist/index.css";
-import { saveImageHandler } from "../../features/counter/menu";
+import {
+  saveImageHandler,
+  stagedSavedImageHandler,
+} from "../../features/counter/menu";
 
 export default function RightPopup(props) {
   const [firstName, setFirstName] = React.useState("");
@@ -10,7 +13,6 @@ export default function RightPopup(props) {
   const dispatch = useDispatch();
   const saveItemHandler = (name) => {
     const bareData = props.data;
-
     const obj = {
       ...bareData,
       saved: true,
@@ -18,6 +20,10 @@ export default function RightPopup(props) {
     };
     console.log("obj", obj);
     dispatch(saveImageHandler(obj));
+    saveAndShowHandler(name);
+  };
+  const saveAndShowHandler = (title) => {
+    dispatch(stagedSavedImageHandler(title));
   };
   return (
     <div>

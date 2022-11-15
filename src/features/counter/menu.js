@@ -4,6 +4,7 @@ const initialState = {
   fetchedImages: [],
   saveImages: [],
   savePolygons: [],
+  stagedSavedImage: "",
 };
 
 export const counterSlice = createSlice({
@@ -15,6 +16,9 @@ export const counterSlice = createSlice({
     },
     saveImageHandler: (state, action) => {
       state.saveImages.push(action.payload);
+    },
+    stagedSavedImageHandler: (state, action) => {
+      state.stagedSavedImage = action.payload;
     },
 
     savePolygonHandler: (state, action) => {
@@ -28,7 +32,11 @@ export const counterSlice = createSlice({
   },
 });
 
-export const { getImagesHandler, saveImageHandler, savePolygonHandler } =
-  counterSlice.actions;
+export const {
+  getImagesHandler,
+  saveImageHandler,
+  savePolygonHandler,
+  stagedSavedImageHandler,
+} = counterSlice.actions;
 
 export default counterSlice.reducer;
