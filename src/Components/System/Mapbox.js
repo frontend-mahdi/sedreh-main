@@ -21,6 +21,7 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 import {
   getPolygonFromUser,
+  getTotalMiddlePolygon,
   getUrlCompare,
   updatePolygonList,
 } from "../../features/counter/map";
@@ -29,6 +30,7 @@ import { useSelector } from "react-redux";
 import { CommonLoading } from "react-loadingg";
 import { FaTimes } from "react-icons/fa";
 import CloseLayerPopup from "./CloseLayerPopup";
+import usePolygonCenter from "./customHooks/usePolygonCenter";
 setRTLTextPlugin(
   "https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-rtl-text/v0.2.3/mapbox-gl-rtl-text.js"
 );
@@ -80,9 +82,19 @@ export default function Mapbox() {
   const [mapStyle, setMapStyle] = useState(
     "mapbox://styles/mapbox/streets-v11"
   );
+  // custom hooks
+  const [centerPolyg] = usePolygonCenter();
+
   const mapRef = useRef();
   const editorRef = useRef();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (!!!!centerPolyg && centerPolyg.length > 0) {
+      dispatch(getTotalMiddlePolygon(centerPolyg));
+    }
+  }, [centerPolyg]);
+
   useEffect(() => {
     if (selectedLayer?.center?.length > 0) {
       setViewport({
@@ -264,29 +276,7 @@ export default function Mapbox() {
           editHandleShape={"circle"}
         />
         {renderDrawTools()}
-        {/* <div style={{ position: "absolute", zIndex: "9999" }}>
-          <button>
-            <div className="bg-black-rgba w-20 h-11 flex justify-center rounded-xl">
-              <div className="flex justify-center items-center">
-                <button className="text-gray w-8 flex justify-center items-center">
-                  بستن
-                </button>
-              </div>
-            </div>
-          </button>
-        </div> */}
-        {/* <div className="mapboxgl-ctrl-bottom-right">
-          <div
-            className="mr-[48vw] mb-8 bg-black px-4 py-2 rounded-sm text-white cursor-pointer"
-            style={{ userSelect: "element" }}
-          >
-            <FaTimes
-              className="inline "
-              onClick={() => console.log("clicked")}
-            />
-            <button className="inline mx-2">بستن تصویر</button>
-          </div>
-        </div> */}
+
         {!!!!selectedLayer.layerName && (
           <CloseLayerPopup data={selectedLayer} />
         )}

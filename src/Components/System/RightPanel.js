@@ -57,7 +57,6 @@ export default function RightPanel() {
       setShowPopup(true);
     }
   }, [selectedLayer]);
-  useEffect(() => {}, [fetchedImages]);
 
   // }, []);
   useEffect(() => {
@@ -167,18 +166,6 @@ export default function RightPanel() {
     return [(lats / lengthPolyg).toFixed(5), (lons / lengthPolyg).toFixed(5)];
   };
 
-  useEffect(() => {
-    if (!!!!centerPolyg && centerPolyg.length > 0) {
-      dispatch(getTotalMiddlePolygon(centerPolyg));
-    }
-  }, [centerPolyg]);
-  // const setShape = (shape) => {
-  //   dispatch(setPolyOnMap(shape));
-  // };
-
-  // const setCenter = (centerPolyg) => {
-  //   dispatch(getTotalMiddlePolygon(centerPolyg));
-  // };
   return (
     <div>
       <div
@@ -244,35 +231,14 @@ export default function RightPanel() {
         </div>
         <div className="absolute bottom-0">
           <div className="mb-5 text-center " dir="rtl">
-            {/* <p className="m_time"> */}
-
-            {/* {new Date().toLocaleString("fa-IR-u-nu-latn", {
-                hour: "numeric",
-                minute: "numeric",
-                hour12: false,
-              })} */}
-            {/* {new Date().getHours()}:{new Date().getMinutes()} */}
-            {/* </p> */}
-
             <p className="font-medium text-white bg-gray-background">{time}</p>
             <p className="px-2 pt-2">{date}</p>
           </div>
         </div>
-        {/* {showPopup && (
-          <button onClick={removeImage}>
-            <div className="bg-black-rgba w-20 h-11 flex justify-center rounded-xl">
-              <div className="flex justify-center items-center">
-                <button className="text-gray w-8 flex justify-center items-center">
-                  بستن
-                </button>
-              </div>
-            </div>
-          </button>
-        )} */}
       </div>
 
       {(isShownFirst || isShownSecond || isShownThird || isShownFourth) && (
-        <div className="right-system bg-black-rgba fixed right-14 w-80 h-580 text-gray items-center rounded-l-2xl gap-10 flex flex-col z-10 justify-start mt-28">
+        <div className=" bg-black-rgba fixed right-14 w-80 h-580 text-gray items-center rounded-l-2xl gap-10 flex flex-col z-10 justify-start mt-28">
           <div className="w-full h-full rounded-l-2xl">
             {isShownFirst && <FirstButton closeTabs={menuItemShowHandler} />}
             {isShownSecond && <SecondButton closeTabs={menuItemShowHandler} />}

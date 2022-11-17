@@ -17,6 +17,7 @@ import {
   savePolygonHandler,
 } from "../../features/counter/menu";
 import useSavedImages from "./customHooks/useSavedImages";
+import calcCenterHandler from "./utils/calcCenter";
 
 export default function ThirdButton() {
   const dispatch = useDispatch();
@@ -27,16 +28,7 @@ export default function ThirdButton() {
     setIsShownButton((current) => !current);
   };
 
-  const fetchedImages = useSelector((state) => state.menu.fetchedImages);
   const [saveImages] = useSavedImages();
-
-  useEffect(() => {
-    console.log("polygonTitle", polygonTitle);
-    const polyArr = polygon?.geometry?.coordinates[0];
-    if (polyArr?.length > 0) {
-      setCenterPolyg(calcPolyCenter(polyArr));
-    }
-  }, [polygon]);
 
   useEffect(() => {
     if (!!!!polygonTitle.title) {
@@ -52,12 +44,6 @@ export default function ThirdButton() {
     }
   }, [polygonTitle]);
 
-  useEffect(() => {
-    if (!!!!centerPolyg && centerPolyg.length > 0) {
-      dispatch(getTotalMiddlePolygon(centerPolyg));
-    }
-  }, [centerPolyg]);
-
   const setCenter = (centerPolyg) => {
     dispatch(getTotalMiddlePolygon(centerPolyg));
   };
@@ -65,49 +51,6 @@ export default function ThirdButton() {
   const polygon = useSelector((state) => state?.map?.polygon);
 
   const polygonTitle = useSelector((state) => state.map.polygonTitle);
-
-  const calcPolyCenter = function (polygon) {
-    let lats = 0;
-    let lons = 0;
-    let lengthPolyg = polygon?.length - 1;
-    for (let i = 0; i < lengthPolyg; i++) {
-      const lat = polygon[i][0];
-      const lon = polygon[i][1];
-      lats = lat + lats;
-      lons += lon;
-    }
-    return [(lats / lengthPolyg).toFixed(5), (lons / lengthPolyg).toFixed(5)];
-  };
-
-  const removeImage = () => {
-    dispatch(getPolygonTitle(""));
-  };
-
-  useEffect(() => {
-    console.log(
-      "savedImages >>>>",
-      window.localStorage.getItem("savedPictures")
-    );
-    var data = window.localStorage.getItem("savedPictures");
-    setSavedImages(JSON.parse(data));
-  }, []);
-
-  useEffect(() => {
-    if (!!!!centerPolyg && centerPolyg.length > 0) {
-      dispatch(getTotalMiddlePolygon(centerPolyg));
-    }
-  }, [centerPolyg]);
-  const setShape = (shape) => {
-    dispatch(setPolyOnMap(shape));
-  };
-
-  useEffect(() => {
-    console.log("polygonTitle", polygonTitle);
-    const polyArr = polygon?.geometry?.coordinates[0];
-    if (polyArr?.length > 0) {
-      setCenterPolyg(calcPolyCenter(polyArr));
-    }
-  }, [polygon]);
 
   const fetchAndShowImage = function (element, side) {
     dispatch(getPolygonLoading(true));
@@ -142,108 +85,101 @@ export default function ThirdButton() {
   };
 
   return (
-    <div className="h-12 w-full flex">
-      <div className="w-1/2 rounded-tl-2xl flex justify-center items-center flex-col">
-        <button className="mb-2" onClick={handleClickButton}>
-          تصویر چپ
-        </button>
-        {isShownButton == false ? (
-          <div className="w-full h-1 bg-primarythree text-black flex justify-center items-center flex-col">
-            <div className="text-gray ml-50 mt-40 w-full max-h-32">
-              {!!saveImages &&
-                saveImages.map((element, index) => {
-                  return (
-                    <div
-                      key={index}
-                      dir="rtl"
-                      className="bg-green-background w-64 h-28 rounded-lg mb-3"
-                    >
-                      <div className="bg-green-background-title rounded-t-lg flex justify-between items-center">
-                        <p className="flex items-center mr-4">
-                          {element.title}
-                        </p>
-                        <button
-                          onClick={() => {
-                            fetchAndShowImage(element, "left");
-                            setCenter(element.center);
-                          }}
-                        >
-                          <img
-                            src={diffrence}
-                            alt="مقایسه"
-                            className="w-4 h-4 ml-4"
-                            title="مقایسه"
-                            onClick={console.log(element.id)}
-                          />
-                        </button>
-                      </div>
-                      <div className="flex flex-col m-4">
-                        {element.date}
-                        <p>Sentinel-2</p>
-                        <p>
-                          {element.center[0]} - {element.center[1]}
-                        </p>
-                      </div>
-                    </div>
-                  );
-                })}
-              {}
-            </div>
-          </div>
-        ) : (
-          <></>
-        )}
+    <div className="flex flex-col h-full">
+      <div className="flex flex-row text-center w-full ">
+        <div
+          className="w-1/2 rounded-tl-2xl py-2"
+          style={{ borderBottom: isShownButton && "4px solid #95DD91" }}
+        >
+          <button onClick={handleClickButton}>تصویر سمت چپ</button>
+        </div>
+        <div
+          className="w-1/2 rounded-tl-2xl py-2"
+          style={{ borderBottom: !isShownButton && "4px solid #95DD91" }}
+        >
+          <button onClick={handleClickButton}>تصویر سمت راست</button>
+        </div>
       </div>
-      <div className="w-1/2 flex justify-center items-center flex-col">
-        <button className="mb-2" onClick={handleClickButton}>
-          تصویر راست
-        </button>
-        {isShownButton ? (
-          <div className="w-full h-1 bg-primarythree text-black flex justify-center items-center flex-col">
-            <div className="text-gray mt-40 w-full max-h-32 mr-150">
-              {!!saveImages &&
-                saveImages.map((element, index) => {
-                  return (
-                    <div
-                      key={index}
-                      dir="rtl"
-                      className="bg-green-background w-64 h-28 rounded-lg mb-3"
+
+      {isShownButton ? (
+        <div className="text-gray py-4 overflow-auto ">
+          {!!saveImages &&
+            saveImages.map((element, index) => {
+              return (
+                <div
+                  key={index}
+                  dir="rtl"
+                  className="bg-green-background w-64 h-28 rounded-lg mb-3 mx-auto"
+                >
+                  <div className="bg-green-background-title rounded-t-lg flex justify-between items-center">
+                    <p className="flex items-center mr-4">{element.title}</p>
+                    <button
+                      onClick={() => {
+                        fetchAndShowImage(element, "left");
+                        setCenter(element.center);
+                      }}
                     >
-                      <div className="bg-green-background-title rounded-t-lg flex justify-between items-center">
-                        <p className="flex items-center mr-4">
-                          {element.title}
-                        </p>
-                        <button
-                          onClick={() => {
-                            fetchAndShowImage(element, "right");
-                            setCenter(element.center);
-                          }}
-                        >
-                          <img
-                            src={diffrence}
-                            alt="مقایسه"
-                            className="w-4 h-4 ml-4"
-                            title="مقایسه"
-                          />
-                        </button>
-                      </div>
-                      <div className="flex flex-col m-4">
-                        {element.date}
-                        <p>Sentinel-2</p>
-                        <p>
-                          {element.center[0]} - {element.center[1]}
-                        </p>
-                      </div>
-                    </div>
-                  );
-                })}
-              {}
-            </div>
-          </div>
-        ) : (
-          <div className="flex bg-primarythree flex-row"></div>
-        )}
-      </div>
+                      <img
+                        src={diffrence}
+                        alt="مقایسه"
+                        className="w-4 h-4 ml-4"
+                        title="مقایسه"
+                        onClick={console.log(element.id)}
+                      />
+                    </button>
+                  </div>
+                  <div className="flex flex-col m-4">
+                    {element.date}
+                    <p>Sentinel-2</p>
+                    <p>
+                      {element.center[0]} - {element.center[1]}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+          {}
+        </div>
+      ) : (
+        <div className="text-gray py-4 overflow-auto">
+          {!!saveImages &&
+            saveImages.map((element, index) => {
+              return (
+                <div
+                  key={index}
+                  dir="rtl"
+                  className="bg-green-background w-64 h-28 rounded-lg mb-3 mx-auto"
+                >
+                  <div className="bg-green-background-title rounded-t-lg flex justify-between items-center">
+                    <p className="flex items-center mr-4">{element.title}</p>
+                    <button
+                      onClick={() => {
+                        fetchAndShowImage(element, "right");
+                        setCenter(element.center);
+                      }}
+                    >
+                      <img
+                        src={diffrence}
+                        alt="مقایسه"
+                        className="w-4 h-4 ml-4"
+                        title="مقایسه"
+                        onClick={console.log(element.id)}
+                      />
+                    </button>
+                  </div>
+                  <div className="flex flex-col m-4">
+                    {element.date}
+                    <p>Sentinel-2</p>
+                    <p>
+                      {element.center[0]} - {element.center[1]}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+          {}
+        </div>
+      )}
     </div>
   );
 }
