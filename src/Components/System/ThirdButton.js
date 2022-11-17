@@ -16,6 +16,7 @@ import {
   getImagesHandler,
   savePolygonHandler,
 } from "../../features/counter/menu";
+import useSavedImages from "./customHooks/useSavedImages";
 
 export default function ThirdButton() {
   const dispatch = useDispatch();
@@ -27,6 +28,7 @@ export default function ThirdButton() {
   };
 
   const fetchedImages = useSelector((state) => state.menu.fetchedImages);
+  const [saveImages] = useSavedImages();
 
   useEffect(() => {
     console.log("polygonTitle", polygonTitle);
@@ -76,16 +78,6 @@ export default function ThirdButton() {
     }
     return [(lats / lengthPolyg).toFixed(5), (lons / lengthPolyg).toFixed(5)];
   };
-
-  const [saveImages, setSavedImages] = useState([]);
-  const _saveImages = useSelector((state) => state.menu.saveImages);
-  useEffect(() => {
-    if (_saveImages.length > 0) {
-      console.log("saveImages", _saveImages);
-      setSavedImages(_saveImages);
-      window.localStorage.setItem("savedPictures", JSON.stringify(_saveImages));
-    }
-  }, [_saveImages]);
 
   const removeImage = () => {
     dispatch(getPolygonTitle(""));

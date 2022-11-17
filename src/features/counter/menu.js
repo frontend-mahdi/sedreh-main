@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   fetchedImages: [],
-  saveImages: [],
+  saveImages: JSON.parse(window.localStorage.getItem("savedPictures")) || [],
   savePolygons: [],
   stagedSavedImage: "",
 };

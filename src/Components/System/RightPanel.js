@@ -24,7 +24,6 @@ let options = { year: "numeric", month: "long", day: "numeric" };
 let today = new Date().toLocaleDateString("fa-IR", options);
 
 export default function RightPanel() {
-  const [saveImages, setSavedImages] = useState([]);
   const [savedPolygons, setSavedPolygons] = useState([]);
   const [saveRegions, setSavedRegions] = useState([]);
   const [savedElements, setSavedElements] = useState([]);
@@ -43,7 +42,6 @@ export default function RightPanel() {
   );
 
   const polygon = useSelector((state) => state?.map?.polygon);
-  const _saveImages = useSelector((state) => state.menu.saveImages);
   const fetchedImages = useSelector((state) => state.menu.fetchedImages);
   const selectedLayer = useSelector((state) => state.map?.titlePolygon);
   const polygonTitle = useSelector((state) => state.map.polygonTitle);
@@ -51,6 +49,7 @@ export default function RightPanel() {
   const [showPopup, setShowPopup] = useState(false);
   // custom hooks
   const [{ date, time }] = useTimeDate();
+
   const dispatch = useDispatch();
   useEffect(() => {
     const layerName = selectedLayer.layerName;
@@ -59,13 +58,6 @@ export default function RightPanel() {
     }
   }, [selectedLayer]);
   useEffect(() => {}, [fetchedImages]);
-  useEffect(() => {
-    if (_saveImages.length > 0) {
-      console.log("saveImages", _saveImages);
-      setSavedImages(_saveImages);
-      window.localStorage.setItem("savedPictures", JSON.stringify(_saveImages));
-    }
-  }, [_saveImages]);
 
   // }, []);
   useEffect(() => {

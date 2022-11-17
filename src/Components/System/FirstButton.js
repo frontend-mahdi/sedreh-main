@@ -20,6 +20,7 @@ import RightPopup from "./RightPopup";
 import squaresave from "../../Images/square.png";
 import save from "../../Images/save.png";
 import pic from "../../Images/pic.png";
+import useSavedImages from "./customHooks/useSavedImages";
 
 export default function FirstButton({ closeTabs }) {
   const dispatch = useDispatch();
@@ -29,7 +30,7 @@ export default function FirstButton({ closeTabs }) {
     setIsShownButton((current) => !current);
   };
   const [isShownButton, setIsShownButton] = React.useState(true);
-
+  const [saveImages] = useSavedImages();
   const buttonClicked = function () {
     dispatch(getSubmitLoading(true));
     fetch("http://138.201.167.227/api/get-image-collection/", {
@@ -149,28 +150,9 @@ export default function FirstButton({ closeTabs }) {
     return [(lats / lengthPolyg).toFixed(5), (lons / lengthPolyg).toFixed(5)];
   };
 
-  const [saveImages, setSavedImages] = useState([]);
-  const _saveImages = useSelector((state) => state.menu.saveImages);
-  useEffect(() => {
-    if (_saveImages.length > 0) {
-      console.log("saveImages", _saveImages);
-      setSavedImages(_saveImages);
-      window.localStorage.setItem("savedPictures", JSON.stringify(_saveImages));
-    }
-  }, [_saveImages]);
-
   const removeImage = () => {
     dispatch(getPolygonTitle(""));
   };
-
-  useEffect(() => {
-    console.log(
-      "savedImages >>>>",
-      window.localStorage.getItem("savedPictures")
-    );
-    var data = window.localStorage.getItem("savedPictures");
-    setSavedImages(JSON.parse(data));
-  }, []);
 
   return (
     <>
