@@ -58,36 +58,6 @@ export default function RightPanel() {
     }
   }, [selectedLayer]);
 
-  // }, []);
-  useEffect(() => {
-    console.log(
-      "savedPolygons >>>>",
-      window.localStorage.getItem("savedPolygons")
-    );
-    var data = window.localStorage.getItem("savedPolygons");
-    setSavedPolygons(JSON.parse(data));
-  }, []);
-  useEffect(() => {
-    console.log("polygonTitle", polygonTitle);
-    const polyArr = polygon?.geometry?.coordinates[0];
-    if (polyArr?.length > 0) {
-      setCenterPolyg(calcPolyCenter(polyArr));
-    }
-  }, [polygon]);
-  useEffect(() => {
-    if (!!!!polygonTitle.title) {
-      const newPoly = {
-        title: polygonTitle.title,
-        desc: polygonTitle.desc,
-        center: centerPolyg,
-        shape: polygon,
-      };
-      dispatch(updatePolygonList(newPoly));
-      dispatch(savePolygonHandler(newPoly));
-      window.localStorage.setItem("savedPolygons", JSON.stringify(newPoly));
-    }
-  }, [polygonTitle]);
-
   useEffect(() => {
     if (titleSubmitLoading) {
       setSubmitLoading(true);
@@ -146,25 +116,7 @@ export default function RightPanel() {
     }
   };
 
-  dispatch(getButtonCompare(isShownThird));
-
-  // const handleClickButton = () => {
-  //   setIsShownButton((current) => !current);
-  // };
-
-  // @mahdi : cleaning funtions
-  const calcPolyCenter = function (polygon) {
-    let lats = 0;
-    let lons = 0;
-    let lengthPolyg = polygon?.length - 1;
-    for (let i = 0; i < lengthPolyg; i++) {
-      const lat = polygon[i][0];
-      const lon = polygon[i][1];
-      lats = lat + lats;
-      lons += lon;
-    }
-    return [(lats / lengthPolyg).toFixed(5), (lons / lengthPolyg).toFixed(5)];
-  };
+  // dispatch(getButtonCompare(isShownThird)); ???????
 
   return (
     <div>

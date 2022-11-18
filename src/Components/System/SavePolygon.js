@@ -1,14 +1,33 @@
 import React from "react";
 import Popup from "reactjs-popup";
 import "reactjs-popup/dist/index.css";
-import { getPolygonTitleFromUser } from "../../features/counter/map";
+import {
+  getPolygonFromUser,
+  getPolygonTitleFromUser,
+} from "../../features/counter/map";
 import { useDispatch } from "react-redux";
 
 export default function SavePolygon(props) {
   const [firstName, setFirstName] = React.useState("");
   const [lastName, setLastName] = React.useState("");
   const dispatch = useDispatch();
+  const handleSubmit = (event) => {
+    event.preventDefault();
 
+    if (firstName.length > 0) {
+      dispatch(
+        getPolygonTitleFromUser({
+          title: firstName,
+          desc: lastName ?? "",
+        })
+      );
+      dispatch(getPolygonFromUser(props.data));
+      window.localStorage.setItem("currentPolygon", JSON.stringify(props.data));
+    }
+
+    setFirstName("");
+    setLastName("");
+  };
   return (
     <div className="popup bg-black-rgba flex justify-center rounded-xl">
       <div className="text-gray w-28 flex justify-center items-center">
@@ -54,27 +73,12 @@ export default function SavePolygon(props) {
                       />
                     </div>
                     <button
-                      type="button"
+                      type="submit"
                       disabled={firstName.length == 0}
                       className="bg-primarythree px-10 disabled:text-grayer mx-auto  disabled:bg-gray h-10 rounded-lg flex justify-center items-center mt-2 mb-4 text-black"
-                      onClick={(event) => {
+                      onClick={(e) => {
                         close();
-                        event.preventDefault();
-
-                        console.log("firstName 👉️", firstName);
-                        console.log("lastName 👉️", lastName);
-
-                        if (firstName.length > 0) {
-                          dispatch(
-                            getPolygonTitleFromUser({
-                              title: firstName,
-                              desc: lastName ?? "",
-                            })
-                          );
-                        }
-
-                        setFirstName("");
-                        setLastName("");
+                        handleSubmit(e);
                       }}
                     >
                       ثبت محدوده

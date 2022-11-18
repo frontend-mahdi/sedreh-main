@@ -47,36 +47,6 @@ const Compare = function Compare() {
     height: 1,
   };
 
-  // const renderDrawTools = () => {
-  //   return (
-  //     <div className="mapboxgl-ctrl-bottom-left">
-  //       <div className="mapboxgl-ctrl-group mapboxgl-ctrl">
-  //         <button
-  //           // disabled={polygonAdded}
-  //           style={{
-  //             cursor: polygonAdded ? "not-allowed" : "pointer",
-  //             backgroundColor: polygonAdded ? "#2e2e2e" : "#000",
-  //           }}
-  //           className="mapbox-gl-draw_ctrl-draw-btn mapbox-gl-draw_polygon mapbox-gl-draw_ctrl-draw"
-  //           title="Polygon tool (p)"
-  //           onClick={drawRect}
-  //         />
-  //         {isShown ? <SavePolygon delete={onDelete} /> : null}
-  //         <button
-  //           className="mapbox-gl-draw_ctrl-draw-btn mapbox-gl-draw_point "
-  //           title="Point tool"
-  //           onClick={() => setMode(new DrawPointMode())}
-  //         />
-  //         <button
-  //           className="mapbox-gl-draw_ctrl-draw-btn mapbox-gl-draw_trash"
-  //           title="delete"
-  //           onClick={onDelete}
-  //         />
-  //       </div>
-  //     </div>
-  //   );
-  // };
-  // latitude: +middlePoygonx[1];
   const [viewport, setViewport] = useState({
     width: "100vw",
     height: "100vh",

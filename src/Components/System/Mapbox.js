@@ -31,6 +31,7 @@ import { CommonLoading } from "react-loadingg";
 import { FaTimes } from "react-icons/fa";
 import CloseLayerPopup from "./CloseLayerPopup";
 import usePolygonCenter from "./customHooks/usePolygonCenter";
+import { savePolygonHandler } from "../../features/counter/menu";
 setRTLTextPlugin(
   "https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-rtl-text/v0.2.3/mapbox-gl-rtl-text.js"
 );
@@ -58,6 +59,8 @@ export default function Mapbox() {
   const selectedLayer = useSelector((state) => state.map.titlePolygon);
   const polygonLoading = useSelector((state) => state.map.titlePolygonLoading);
   const polygon = useSelector((state) => state.map.polygon);
+  const polygonTitle = useSelector((state) => state.map.polygonTitle);
+
   const savedPolyOnMap = useSelector((state) => state.map.savedPolyOnMap);
   // console.log(titlePolygon);
   // const selectedLayerLat = +selectedLayer?.center[1];
@@ -72,6 +75,7 @@ export default function Mapbox() {
     pitch: 0,
   });
 
+  const [currentPolygon, setCurrentPolygon] = useState([]);
   const [clearMap, setClearMap] = useState(false);
   const [isShown, setIsShown] = useState(false);
   const [polygonAdded, setPolygonAdded] = useState(false);
@@ -97,10 +101,12 @@ export default function Mapbox() {
 
   useEffect(() => {
     if (selectedLayer?.center?.length > 0) {
-      setViewport({
-        ...viewport,
-        latitude: +selectedLayer?.center[1] || 35.689198,
-        longitude: +selectedLayer?.center[0] || 51.388973,
+      setViewport((viewport) => {
+        return {
+          ...viewport,
+          latitude: +selectedLayer?.center[1] || 35.689198,
+          longitude: +selectedLayer?.center[0] || 51.388973,
+        };
       });
     }
   }, [selectedLayer]);
@@ -113,6 +119,18 @@ export default function Mapbox() {
       changeCursor("none");
     }
   }, [polygonAdded]);
+  useEffect(() => {
+    if (!!!!polygonTitle.title && centerPolyg.length > 0) {
+      const newPoly = {
+        title: polygonTitle.title,
+        desc: polygonTitle.desc,
+        center: centerPolyg,
+        shape: polygon,
+      };
+      dispatch(updatePolygonList(newPoly));
+      dispatch(savePolygonHandler(newPoly));
+    }
+  }, [polygonTitle, centerPolyg]);
   const onUpdate = (payload) => {
     setClearMap(false);
 
@@ -123,15 +141,15 @@ export default function Mapbox() {
     }
 
     if (
-      payload.editType == "addFeature" ||
-      payload.editType == "movePosition"
+      payload.editType == "addFeature"
+      //  ||payload.editType == "movePosition"
     ) {
-      dispatch(getPolygonFromUser(payload.data[0]));
-
-      window.localStorage.setItem(
-        "currentPolygon",
-        JSON.stringify(payload.data[0])
-      );
+      setCurrentPolygon(payload.data[0]);
+      // dispatch(getPolygonFromUser(payload.data[0]));
+      // window.localStorage.setItem(
+      //   "currentPolygon",
+      //   JSON.stringify(payload.data[0])
+      // );
     }
     if (payload.editType === "getFeatures") {
       setMode(new EditingMode());
@@ -183,11 +201,12 @@ export default function Mapbox() {
             title="Polygon tool (p)"
             onClick={drawRect}
           />
-          {isShown ? <SavePolygon delete={onDelete} /> : null}
+          {isShown ? (
+            <SavePolygon data={currentPolygon} delete={onDelete} />
+          ) : null}
           <button
             className="mapbox-gl-draw_ctrl-draw-btn mapbox-gl-draw_point "
             title="Point tool"
-            // onClick={() => setMode(new DrawPointMode())}
             onClick={drawPoint}
           />
           <button
@@ -242,7 +261,10 @@ export default function Mapbox() {
         ref={mapRef}
         mapStyle={mapStyle}
         mapboxApiAccessToken="pk.eyJ1IjoiZmFrZXVzZXJnaXRodWIiLCJhIjoiY2pwOGlneGI4MDNnaDN1c2J0eW5zb2ZiNyJ9.mALv0tCpbYUPtzT7YysA2g"
-        onViewportChange={(nextViewport) => setViewport(nextViewport)}
+        onViewportChange={(nextViewport) => {
+          setViewport(nextViewport);
+          console.log("nextViewport", nextViewport);
+        }}
         className="mapbox w-580"
       >
         {/* @mahdi:

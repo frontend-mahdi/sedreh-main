@@ -32,10 +32,12 @@ export default function NavSystem() {
 
         <div>
           <RightPopupConnection
-            btn=<button className="guide bg-black-rgba text-gray rounded-lg flex justify-center items-center w-28 h-10">
-              <p>ارتباط با ما</p>
-              <img src={device} alt="" className="ml-2" />
-            </button>
+            btn={
+              <button className="guide bg-black-rgba text-gray rounded-lg flex justify-center items-center w-28 h-10">
+                <p>ارتباط با ما</p>
+                <img src={device} alt="" className="ml-2" />
+              </button>
+            }
           />
         </div>
       </div>

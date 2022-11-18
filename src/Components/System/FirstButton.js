@@ -12,6 +12,7 @@ import {
   updatePolygonList,
 } from "../../features/counter/map";
 import {
+  fetchImagesEmptyHandler,
   getImagesHandler,
   savePolygonHandler,
 } from "../../features/counter/menu";
@@ -29,6 +30,10 @@ export default function FirstButton({ closeTabs }) {
 
   const polygon = useSelector((state) => state.map.polygon);
   const polygonTitle = useSelector((state) => state.map.polygonTitle);
+  const fetchedImagesEmpty = useSelector(
+    (state) => state.menu.fetchedImagesEmpty
+  );
+
   // custom hooks
   const [centerPolyg] = usePolygonCenter();
   const [saveImages] = useSavedImages();
@@ -57,7 +62,8 @@ export default function FirstButton({ closeTabs }) {
     })
       .then((response) => response.json())
       .then((data) => {
-        const list = data.filter((el) => el.saved == true);
+        if (data?.length == 0) dispatch(fetchImagesEmptyHandler(true));
+
         data.forEach((item, i) => {
           item.id = i + 1;
           item.saved = false;
@@ -107,20 +113,6 @@ export default function FirstButton({ closeTabs }) {
     (state) => state.map.titleSubmitLoading
   );
 
-  useEffect(() => {
-    if (!!!!polygonTitle.title) {
-      const newPoly = {
-        title: polygonTitle.title,
-        desc: polygonTitle.desc,
-        center: centerPolyg,
-        shape: polygon,
-      };
-      dispatch(updatePolygonList(newPoly));
-      dispatch(savePolygonHandler(newPoly));
-      window.localStorage.setItem("savedPolygons", JSON.stringify(newPoly));
-    }
-  }, [polygonTitle]);
-
   const setCenter = (centerPolyg) => {
     dispatch(getTotalMiddlePolygon(centerPolyg));
   };
@@ -132,7 +124,7 @@ export default function FirstButton({ closeTabs }) {
   return (
     <>
       <div className="flex flex-col h-full">
-        <div className="flex flex-row text-center w-full ">
+        <div className="flex flex-row text-center w-full">
           <div
             className="w-1/2 rounded-tl-2xl py-2"
             style={{ borderBottom: isShownButton && "4px solid #95DD91" }}
@@ -152,10 +144,9 @@ export default function FirstButton({ closeTabs }) {
         </div>
 
         {isShownButton ? (
-          <div className="text-gray py-4 overflow-auto">
-            {!!saveImages &&
+          <div className="text-gray py-4 overflow-auto" dir="rtl">
+            {saveImages.length > 0 ? (
               saveImages.map((element, index) => {
-                console.log(saveImages);
                 return (
                   <div
                     key={index}
@@ -187,24 +178,32 @@ export default function FirstButton({ closeTabs }) {
                     </div>
                   </div>
                 );
-              })}
+              })
+            ) : (
+              <p className="text-center py-4">تصویر ذخیره شده ای وجود ندارد</p>
+            )}
           </div>
         ) : (
-          <div className="flex justify-center items-center flex-col py-4">
-            <p className="mb-2">انتخاب تاریخ تصویر</p>
-            <DataPicker />
-            <button
-              className="bg-primarythree w-40 h-10 rounded-lg flex justify-center items-center mt-2 text-black"
-              onClick={getImagesCollactionHandler}
-            >
-              ثبت
-              {titleSubmitLoading ? <BoxLoading color="#95DD91" /> : null}
-            </button>
-            <div
-              className="w-full justify-center items-center flex-col h-96 overflow-auto"
-              dir="rtl"
-            >
-              {fetchedImages.length > 0 &&
+          <div
+            className="flex flex-col items-stretch justify-between py-4 "
+            style={{ height: "calc(100% - 43.95px)" }}
+          >
+            <div className="flex flex-col items-center">
+              <p className="mb-2">انتخاب تاریخ تصویر</p>
+              <DataPicker />
+              <button
+                className="bg-primarythree w-40  rounded-lg  mt-2 text-black"
+                onClick={getImagesCollactionHandler}
+              >
+                ثبت
+                {titleSubmitLoading ? <BoxLoading color="#95DD91" /> : null}
+              </button>
+            </div>
+
+            <div className="w-full  overflow-auto h-full" dir="rtl">
+              {titleSubmitLoading ? (
+                <BoxLoading color="#95DD91" />
+              ) : fetchedImages.length > 0 ? (
                 fetchedImages.map((todo, index) => (
                   <div key={index}>
                     <div className="mt-3">
@@ -231,7 +230,14 @@ export default function FirstButton({ closeTabs }) {
                       />
                     </div>
                   </div>
-                ))}
+                ))
+              ) : (
+                fetchedImagesEmpty && (
+                  <p className="text-center py-4">
+                    تصویری در این بازه زمانی پیدا نشد
+                  </p>
+                )
+              )}
             </div>
           </div>
         )}

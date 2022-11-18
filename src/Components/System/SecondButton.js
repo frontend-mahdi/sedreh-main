@@ -10,43 +10,26 @@ import { savePolygonHandler } from "../../features/counter/menu";
 import { GrLocation } from "react-icons/gr";
 import { IconContext } from "react-icons";
 import calcCenterHandler from "./utils/calcCenter";
+import useSavedPolygons from "./customHooks/useSavedPolygons";
 
 export default function SecondButton() {
-  const [savedPolygons, setSavedPolygons] = useState([]);
-  const _savedPolygons = useSelector((state) => state.map?.savedPolygons);
+  const fetchedImages = useSelector((state) => state.menu.fetchedImagesEmpty);
+
+  // custom hook
+  const [savedPolygons] = useSavedPolygons();
 
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (_savedPolygons.length > 0) {
-      console.log("savedPolygons", _savedPolygons);
-      setSavedPolygons(_savedPolygons);
-      window.localStorage.setItem(
-        "savedPolygons",
-        JSON.stringify(_savedPolygons)
-      );
-    }
-  }, [_savedPolygons]);
 
   const setShape = (shape) => {
     dispatch(setPolyOnMap(shape));
   };
-
-  useEffect(() => {
-    console.log(
-      "savedPolygons >>>>",
-      window.localStorage.getItem("savedPolygons")
-    );
-    var data = window.localStorage.getItem("savedPolygons");
-    setSavedPolygons(JSON.parse(data));
-  }, []);
 
   return (
     <div className="h-12 w-full flex">
       <div className="w-full rounded-tl-2xl flex justify-center items-center flex-col">
         <p className="mb-2"> محدوده های ذخیره شده</p>
         <div className="w-full h-1 bg-primarythree">
-          {!!savedPolygons &&
+          {savedPolygons.length > 0 ? (
             savedPolygons?.map((item, index) => (
               <div
                 key={index}
@@ -60,16 +43,6 @@ export default function SecondButton() {
                       onClick={() => setShape(item.shape)}
                       className="ml-4"
                     >
-                      {/* <IconContext.Provider
-                        value={{
-                          color: "white",
-                          style: { color: "white" },
-                        }}
-                      >
-                        <>
-                          <GrLocation color="white" />
-                        </>
-                      </IconContext.Provider> */}
                       <GrLocation color="#fff " />
                     </button>
                   </div>
@@ -80,7 +53,10 @@ export default function SecondButton() {
                   </p>
                 </div>
               </div>
-            ))}
+            ))
+          ) : (
+            <p className="text-center py-4">محدودی ذخیره شده ای وجود ندارد</p>
+          )}
         </div>
       </div>
     </div>

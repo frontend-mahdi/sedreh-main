@@ -5,7 +5,7 @@ const initialState = {
   savedPolyOnMap: [],
   savedPolyOnMapIndex: [],
   polygonTitle: {},
-  savedPolygons: [],
+  savedPolygons: JSON.parse(window.localStorage.getItem("savedPolygons")) || [],
   titlePolygon: {
     id: 0,
     layerName: "",
@@ -71,6 +71,7 @@ export const counterSlice = createSlice({
     },
     updatePolygonList: (state, action) => {
       state.savedPolygons = [...state.savedPolygons, action.payload];
+      // state.savedPolygons.push(action.payload);
     },
     setPolyOnMap: (state, action) => {
       state.savedPolyOnMap = [action.payload];

@@ -30,27 +30,9 @@ export default function ThirdButton() {
 
   const [saveImages] = useSavedImages();
 
-  useEffect(() => {
-    if (!!!!polygonTitle.title) {
-      const newPoly = {
-        title: polygonTitle.title,
-        desc: polygonTitle.desc,
-        center: centerPolyg,
-        shape: polygon,
-      };
-      dispatch(updatePolygonList(newPoly));
-      dispatch(savePolygonHandler(newPoly));
-      window.localStorage.setItem("savedPolygons", JSON.stringify(newPoly));
-    }
-  }, [polygonTitle]);
-
   const setCenter = (centerPolyg) => {
     dispatch(getTotalMiddlePolygon(centerPolyg));
   };
-
-  const polygon = useSelector((state) => state?.map?.polygon);
-
-  const polygonTitle = useSelector((state) => state.map.polygonTitle);
 
   const fetchAndShowImage = function (element, side) {
     dispatch(getPolygonLoading(true));
@@ -102,8 +84,8 @@ export default function ThirdButton() {
       </div>
 
       {isShownButton ? (
-        <div className="text-gray py-4 overflow-auto ">
-          {!!saveImages &&
+        <div className="text-gray py-4 overflow-auto " dir="rtl">
+          {saveImages.length > 0 ? (
             saveImages.map((element, index) => {
               return (
                 <div
@@ -137,12 +119,14 @@ export default function ThirdButton() {
                   </div>
                 </div>
               );
-            })}
-          {}
+            })
+          ) : (
+            <p className="text-center py-4">تصویر ذخیره شده ای وجود ندارد</p>
+          )}
         </div>
       ) : (
-        <div className="text-gray py-4 overflow-auto">
-          {!!saveImages &&
+        <div className="text-gray py-4 overflow-auto" dir="rtl">
+          {saveImages.length > 0 ? (
             saveImages.map((element, index) => {
               return (
                 <div
@@ -176,8 +160,10 @@ export default function ThirdButton() {
                   </div>
                 </div>
               );
-            })}
-          {}
+            })
+          ) : (
+            <p className="text-center py-4">تصویر ذخیره شده ای وجود ندارد</p>
+          )}
         </div>
       )}
     </div>

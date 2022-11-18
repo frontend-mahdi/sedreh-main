@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   fetchedImages: [],
+  fetchedImagesEmpty: false,
   saveImages: JSON.parse(window.localStorage.getItem("savedPictures")) || [],
   savePolygons: [],
   stagedSavedImage: "",
@@ -13,6 +14,9 @@ export const counterSlice = createSlice({
   reducers: {
     getImagesHandler: (state, action) => {
       state.fetchedImages = action.payload;
+    },
+    fetchImagesEmptyHandler: (state, action) => {
+      state.fetchedImagesEmpty = action.payload;
     },
     saveImageHandler: (state, action) => {
       state.saveImages.push(action.payload);
@@ -33,6 +37,7 @@ export const counterSlice = createSlice({
 });
 
 export const {
+  fetchImagesEmptyHandler,
   getImagesHandler,
   saveImageHandler,
   savePolygonHandler,
