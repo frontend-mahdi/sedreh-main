@@ -7,7 +7,7 @@ const useSavedImages = () => {
 
   useEffect(() => {
     if (_saveImages.length > 0) {
-      console.log("saveImages", _saveImages);
+      // console.log("saveImages", _saveImages);
       setSavedImages(_saveImages);
       window.localStorage.setItem("savedPictures", JSON.stringify(_saveImages));
     }

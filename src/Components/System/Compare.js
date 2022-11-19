@@ -56,10 +56,17 @@ const Compare = function Compare() {
     bearing: 0,
     pitch: 0,
   });
-  const handleViewportChange = useCallback(
-    (newViewport) => setViewport(newViewport),
-    []
-  );
+  const handleViewportChange = useCallback((newViewport) => {
+    if (viewport != newViewport) setViewport(newViewport);
+  }, []);
+  // const handleViewportChange = (preViewport) => {
+  //   // setViewport(viewport);
+  //   console.log("preViewport", preViewport);
+  //   console.log("viewport", viewport);
+  //   console.log("equality", viewport != preViewport);
+  //   if (viewport != preViewport) setViewport(preViewport);
+  // };
+
   const beforeRef = useRef();
   const afterRef = useRef();
   const style = {
@@ -80,7 +87,12 @@ const Compare = function Compare() {
   useEffect(() => {
     const beforeMap = beforeRef.current.getMap();
     const afterMap = afterRef.current.getMap();
-    const map = new MapboxCompare(beforeMap, afterMap, "#comparison-container");
+    const map = new MapboxCompare(
+      beforeMap,
+      afterMap,
+      "#comparison-container",
+      { mousemove: true, orientation: "vertical" }
+    );
 
     return () => map.remove();
   }, []);
@@ -122,22 +134,32 @@ const Compare = function Compare() {
         {...viewport}
         width="100%"
         height="100%"
-        onViewportChange={handleViewportChange}
+        onViewportChange={(viewport) => handleViewportChange(viewport)}
+        onInteractionStateChange={(onInteractionStateChange) =>
+          console.log(
+            "onInteractionStateChange before",
+            onInteractionStateChange
+          )
+        }
         style={style}
         mapStyle="mapbox://styles/mapbox/streets-v11"
         mapboxApiAccessToken={MAPBOX_TOKEN}
+        dragPan={true}
+        scrollZoom={{ smooth: false, speed: 1 }}
+
+        // mapOptions={{ interactive: false }}
       >
-        <FullscreenControl
+        {/* <FullscreenControl
           style={fullStyle}
           className="xyz"
           captureScroll={true}
-        />
-        <div className="nav " style={navStyle}>
+        /> */}
+        {/* <div className="nav " style={navStyle}>
           <NavigationControl
             onViewportChange={(nextViewport) => setViewport(nextViewport)}
           />
-        </div>
-        <Geocoder
+        </div> */}
+        {/* <Geocoder
           mapRef={beforeRef}
           onViewportChange={handleViewportChange}
           mapboxApiAccessToken={
@@ -145,7 +167,7 @@ const Compare = function Compare() {
           }
           placeholder="مکان مورد نظر خود ار پیدا کنید ..."
           position="top-left"
-        />
+        /> */}
 
         {/* {renderDrawTools()} */}
 
@@ -171,15 +193,29 @@ const Compare = function Compare() {
         {...viewport}
         width="100%"
         height="100%"
-        onViewportChange={handleViewportChange}
+        onViewportChange={(viewport) => handleViewportChange(viewport)}
+        onInteractionStateChange={(onInteractionStateChange) =>
+          console.log(
+            "onInteractionStateChange after",
+            onInteractionStateChange
+          )
+        }
         style={style}
         mapStyle="mapbox://styles/mapbox/streets-v11"
         mapboxApiAccessToken={MAPBOX_TOKEN}
         dragPan={true}
+        // scrollZoom={true}
+        scrollZoom={{ smooth: false, speed: 1 }}
+
+        // mapOptions={{ interactive: false }}
       >
         {/* <FullscreenControl style={fullStyle} className="xyz" /> */}
-
-        <Geocoder
+        {/* <div className="nav " style={navStyle}>
+          <NavigationControl
+            onViewportChange={(nextViewport) => setViewport(nextViewport)}
+          />
+        </div> */}
+        {/* <Geocoder
           mapRef={afterRef}
           onViewportChange={handleViewportChange}
           mapboxApiAccessToken={
@@ -187,7 +223,7 @@ const Compare = function Compare() {
           }
           placeholder="مکان مورد نظر خود ار پیدا کنید ..."
           position="top-left"
-        />
+        /> */}
         {urlLayerRight.length > 0 && (
           <Source
             id="wms-test-source2"

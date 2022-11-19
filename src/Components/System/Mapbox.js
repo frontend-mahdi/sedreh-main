@@ -121,11 +121,9 @@ export default function Mapbox() {
       });
     }
   }, [middlePoygon]);
+
   useEffect(() => {
-    console.log("polygon", polygon);
-  }, [polygon]);
-  useEffect(() => {
-    console.log("savedPolyOnMap", savedPolyOnMap);
+    // console.log("savedPolyOnMap", savedPolyOnMap);
     if (savedPolyOnMap.length > 0) {
       setClearMap(false);
     }
@@ -249,13 +247,13 @@ export default function Mapbox() {
       setUrlLayer("");
     };
   }, [selectedLayer]);
-  useEffect(() => {
-    console.log("urlLayer", urlLayer);
-  }, [urlLayer]);
+  // useEffect(() => {
+  //   console.log("urlLayer", urlLayer);
+  // }, [urlLayer]);
 
-  useEffect(() => {
-    console.log("polygonAdded", polygonAdded);
-  }, [polygonAdded]);
+  // useEffect(() => {
+  //   console.log("polygonAdded", polygonAdded);
+  // }, [polygonAdded]);
   const changeCursor = (state) => {
     const layer = document.querySelector("div.overlays");
     if (state == "add") layer.classList.add("cursor-pointer");
@@ -271,7 +269,7 @@ export default function Mapbox() {
         mapboxApiAccessToken="pk.eyJ1IjoiZmFrZXVzZXJnaXRodWIiLCJhIjoiY2pwOGlneGI4MDNnaDN1c2J0eW5zb2ZiNyJ9.mALv0tCpbYUPtzT7YysA2g"
         onViewportChange={(nextViewport) => {
           setViewport(nextViewport);
-          console.log("nextViewport", nextViewport);
+          // console.log("nextViewport", nextViewport);
         }}
         className="mapbox w-580"
       >
