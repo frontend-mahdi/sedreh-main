@@ -65,6 +65,13 @@ export default function RightPanel() {
       setSubmitLoading(false);
     }
   }, [titleSubmitLoading]);
+  useEffect(() => {
+    if (isShownThird) {
+      dispatch(getButtonCompare(true));
+    } else if (isShownFirst || isShownSecond || isShownFourth) {
+      dispatch(getButtonCompare(false));
+    }
+  }, [isShownThird]);
   const menuItemShowHandler = (id) => {
     switch (id) {
       case 1:
@@ -115,8 +122,6 @@ export default function RightPanel() {
         break;
     }
   };
-
-  // dispatch(getButtonCompare(isShownThird)); ???????
 
   return (
     <div>

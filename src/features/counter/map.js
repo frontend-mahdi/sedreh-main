@@ -5,7 +5,6 @@ const initialState = {
   savedPolyOnMap: [],
   savedPolyOnMapIndex: [],
   polygonTitle: {},
-  savedPolygons: JSON.parse(window.localStorage.getItem("savedPolygons")) || [],
   titlePolygon: {
     id: 0,
     layerName: "",
@@ -21,7 +20,7 @@ const initialState = {
   titleSubmitLoading: false,
 
   middlePoygon: [51.388973, 35.689198],
-  buttonCompare: "",
+  buttonCompare: false,
   urlCompare: [],
   infoButton: false,
 };
@@ -68,10 +67,6 @@ export const counterSlice = createSlice({
     },
     getInfoButton: (state, action) => {
       state.infoButton = action.payload;
-    },
-    updatePolygonList: (state, action) => {
-      state.savedPolygons = [...state.savedPolygons, action.payload];
-      // state.savedPolygons.push(action.payload);
     },
     setPolyOnMap: (state, action) => {
       state.savedPolyOnMap = [action.payload];

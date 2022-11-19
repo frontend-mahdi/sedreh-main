@@ -21,7 +21,7 @@ import calcCenterHandler from "./utils/calcCenter";
 
 export default function ThirdButton() {
   const dispatch = useDispatch();
-  const [isShownButton, setIsShownButton] = React.useState(true);
+  const [isShownButton, setIsShownButton] = React.useState(false);
   const [centerPolyg, setCenterPolyg] = useState("");
 
   const handleClickButton = () => {

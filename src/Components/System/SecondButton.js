@@ -1,47 +1,53 @@
-import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import pic from "../../Images/pic.png";
+import React from "react";
+import { useDispatch } from "react-redux";
 import {
   getTotalMiddlePolygon,
-  updatePolygonList,
   setPolyOnMap,
 } from "../../features/counter/map";
-import { savePolygonHandler } from "../../features/counter/menu";
 import { GrLocation } from "react-icons/gr";
-import { IconContext } from "react-icons";
-import calcCenterHandler from "./utils/calcCenter";
 import useSavedPolygons from "./customHooks/useSavedPolygons";
 
 export default function SecondButton() {
-  const fetchedImages = useSelector((state) => state.menu.fetchedImagesEmpty);
-
   // custom hook
   const [savedPolygons] = useSavedPolygons();
 
   const dispatch = useDispatch();
 
-  const setShape = (shape) => {
-    dispatch(setPolyOnMap(shape));
+  const setShape = (item) => {
+    console.log("item.shape", item);
+    dispatch(setPolyOnMap(item.shape));
+    dispatch(getTotalMiddlePolygon(item.center));
   };
 
   return (
-    <div className="h-12 w-full flex">
-      <div className="w-full rounded-tl-2xl flex justify-center items-center flex-col">
-        <p className="mb-2"> محدوده های ذخیره شده</p>
-        <div className="w-full h-1 bg-primarythree">
+    <div className="w-full h-full">
+      <div className="w-full h-full">
+        <p
+          className="w-full text-center py-2"
+          style={{ borderBottom: "4px solid #95DD91" }}
+        >
+          {" "}
+          محدوده های ذخیره شده
+        </p>
+        <div
+          className="w-full h-full overflow-auto py-2"
+          dir="rtl"
+          style={{ height: "calc(100% - 43.95px)" }}
+        >
           {savedPolygons.length > 0 ? (
             savedPolygons?.map((item, index) => (
               <div
                 key={index}
                 dir="rtl"
-                className="bg-green-background w-64 h-12 rounded-lg mt-8"
+                className="bg-green-background w-64 rounded-lg mt-4 mx-auto"
               >
                 <div className="bg-green-background-title mb-1 mt-1 rounded-t-lg ">
                   <div className="flex items-center mr-4  justify-between">
                     <p>{item.title}</p>
                     <button
-                      onClick={() => setShape(item.shape)}
+                      onClick={() => setShape(item)}
                       className="ml-4"
+                      title="نمایش روی نقشه"
                     >
                       <GrLocation color="#fff " />
                     </button>

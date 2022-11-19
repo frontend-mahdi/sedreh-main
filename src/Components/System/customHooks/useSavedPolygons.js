@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 
 const useSavedPolygons = () => {
   const [savedPolygons, setSavedPolygons] = useState([]);
-  const _savedPolygons = useSelector((state) => state.map?.savedPolygons);
+  const _savedPolygons = useSelector((state) => state.menu?.savedPolygons);
 
   useEffect(() => {
     if (_savedPolygons.length > 0) {

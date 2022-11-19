@@ -60,7 +60,7 @@ export default function Mapbox() {
   const polygonLoading = useSelector((state) => state.map.titlePolygonLoading);
   const polygon = useSelector((state) => state.map.polygon);
   const polygonTitle = useSelector((state) => state.map.polygonTitle);
-
+  const middlePoygon = useSelector((state) => state.map?.middlePoygon);
   const savedPolyOnMap = useSelector((state) => state.map.savedPolyOnMap);
   // console.log(titlePolygon);
   // const selectedLayerLat = +selectedLayer?.center[1];
@@ -111,28 +111,34 @@ export default function Mapbox() {
     }
   }, [selectedLayer]);
   useEffect(() => {
+    if (middlePoygon?.length > 0) {
+      setViewport((viewport) => {
+        return {
+          ...viewport,
+          latitude: +middlePoygon[1] || 35.689198,
+          longitude: +middlePoygon[0] || 51.388973,
+        };
+      });
+    }
+  }, [middlePoygon]);
+  useEffect(() => {
     console.log("polygon", polygon);
   }, [polygon]);
+  useEffect(() => {
+    console.log("savedPolyOnMap", savedPolyOnMap);
+    if (savedPolyOnMap.length > 0) {
+      setClearMap(false);
+    }
+  }, [savedPolyOnMap]);
   useEffect(() => {
     if (polygonAdded) {
       setMode(new EditingMode());
       changeCursor("none");
     }
   }, [polygonAdded]);
-  useEffect(() => {
-    if (!!!!polygonTitle.title && centerPolyg.length > 0) {
-      const newPoly = {
-        title: polygonTitle.title,
-        desc: polygonTitle.desc,
-        center: centerPolyg,
-        shape: polygon,
-      };
-      dispatch(updatePolygonList(newPoly));
-      dispatch(savePolygonHandler(newPoly));
-    }
-  }, [polygonTitle, centerPolyg]);
+
   const onUpdate = (payload) => {
-    setClearMap(false);
+    // setClearMap(false);
 
     console.log("onUpdate payload", payload);
     if (payload.data[0].geometry.type == "Polygon") {
@@ -162,6 +168,7 @@ export default function Mapbox() {
     changeCursor("none");
     setIsShown(false);
     setClearMap(true);
+
     console.log("editorRef.current", editorRef.current);
     if (selectedFeatureIndex >= 0) {
       editorRef.current.deleteFeatures(selectedFeatureIndex);
@@ -170,6 +177,7 @@ export default function Mapbox() {
 
   const onSelect = (selected) => {
     console.log("onSelect selected", selected);
+
     setSelectedFeatureIndex(selected.selectedFeatureIndex);
   };
 
@@ -292,7 +300,7 @@ export default function Mapbox() {
           ref={editorRef}
           clickRadius={12}
           mode={mode}
-          features={!polygonAdded && clearMap && savedPolyOnMap}
+          features={clearMap ? null : !polygonAdded && savedPolyOnMap}
           onSelect={onSelect}
           onUpdate={onUpdate}
           editHandleShape={"circle"}

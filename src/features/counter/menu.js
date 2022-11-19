@@ -4,7 +4,7 @@ const initialState = {
   fetchedImages: [],
   fetchedImagesEmpty: false,
   saveImages: JSON.parse(window.localStorage.getItem("savedPictures")) || [],
-  savePolygons: [],
+  savedPolygons: JSON.parse(window.localStorage.getItem("savedPolygons")) || [],
   stagedSavedImage: "",
 };
 
@@ -26,7 +26,7 @@ export const counterSlice = createSlice({
     },
 
     savePolygonHandler: (state, action) => {
-      state.savePolygons.push(action.payload);
+      state.savedPolygons.push(action.payload);
     },
 
     deleteImageHandler: (state, action) => {

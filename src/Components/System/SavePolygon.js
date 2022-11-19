@@ -6,11 +6,14 @@ import {
   getPolygonTitleFromUser,
 } from "../../features/counter/map";
 import { useDispatch } from "react-redux";
+import calcCenterHandler from "./utils/calcCenter";
+import { savePolygonHandler } from "../../features/counter/menu";
 
 export default function SavePolygon(props) {
   const [firstName, setFirstName] = React.useState("");
   const [lastName, setLastName] = React.useState("");
   const dispatch = useDispatch();
+
   const handleSubmit = (event) => {
     event.preventDefault();
 
@@ -23,6 +26,14 @@ export default function SavePolygon(props) {
       );
       dispatch(getPolygonFromUser(props.data));
       window.localStorage.setItem("currentPolygon", JSON.stringify(props.data));
+      console.log("props.data", props.data);
+      const newPoly = {
+        title: firstName,
+        desc: lastName ?? "",
+        center: calcCenterHandler(props.data.geometry.coordinates[0]),
+        shape: props.data,
+      };
+      dispatch(savePolygonHandler(newPoly));
     }
 
     setFirstName("");
