@@ -21,7 +21,9 @@ import calcCenterHandler from "./utils/calcCenter";
 
 export default function ThirdButton() {
   const dispatch = useDispatch();
-  const [isShownButton, setIsShownButton] = React.useState(false);
+  const [isShownButton, setIsShownButton] = useState(false);
+  const [selectedRight, setSelectedRight] = useState({ center: [0, 0], id: 0 });
+  const [selectedLeft, setSelectedLeft] = useState({ center: [0, 0], id: 0 });
   const [centerPolyg, setCenterPolyg] = useState("");
 
   const handleClickButton = () => {
@@ -33,9 +35,18 @@ export default function ThirdButton() {
   const setCenter = (centerPolyg) => {
     dispatch(getTotalMiddlePolygon(centerPolyg));
   };
-
+  const removeImageBySide = (side) => {
+    if (side == "left") {
+      setSelectedLeft({ center: [0, 0], id: 0 });
+      dispatch(getPolygonTitleLeft(""));
+    } else if (side == "right") {
+      setSelectedRight({ center: [0, 0], id: 0 });
+      setSelectedLeft({ center: [0, 0], id: 0 });
+      dispatch(getPolygonTitleRight(""));
+      dispatch(getPolygonTitleLeft(""));
+    }
+  };
   const fetchAndShowImage = function (element, side) {
-    dispatch(getPolygonLoading(true));
     fetch("http://138.201.167.227/api/get-image/", {
       method: "POST",
       body: JSON.stringify({
@@ -52,12 +63,10 @@ export default function ThirdButton() {
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-        dispatch(getPolygonTitle({ layerName: data, ...element }));
-
         if (side == "left") {
-          dispatch(getPolygonTitleLeft(data));
+          dispatch(getPolygonTitleLeft({ layerName: data, ...element }));
         } else if (side == "right") {
-          dispatch(getPolygonTitleRight(data));
+          dispatch(getPolygonTitleRight({ layerName: data, ...element }));
         }
         dispatch(getPolygonLoading(false));
       })
@@ -65,7 +74,12 @@ export default function ThirdButton() {
         console.log(err.message);
       });
   };
-
+  const handleRight = (element) => {
+    setSelectedRight(element);
+  };
+  const handleLeft = (element) => {
+    setSelectedLeft(element);
+  };
   return (
     <div className="flex flex-col h-full">
       <div className="flex flex-row text-center w-full ">
@@ -86,40 +100,56 @@ export default function ThirdButton() {
       {isShownButton ? (
         <div className="text-gray py-4 overflow-auto " dir="rtl">
           {saveImages.length > 0 ? (
-            saveImages.map((element, index) => {
-              return (
-                <div
-                  key={index}
-                  dir="rtl"
-                  className="bg-green-background w-64 h-28 rounded-lg mb-3 mx-auto"
-                >
-                  <div className="bg-green-background-title rounded-t-lg flex justify-between items-center">
-                    <p className="flex items-center mr-4">{element.title}</p>
-                    <button
-                      onClick={() => {
-                        fetchAndShowImage(element, "left");
-                        setCenter(element.center);
-                      }}
-                    >
-                      <img
-                        src={diffrence}
-                        alt="مقایسه"
-                        className="w-4 h-4 ml-4"
-                        title="مقایسه"
-                        onClick={console.log(element.id)}
-                      />
-                    </button>
+            saveImages
+              .filter(
+                (element) => element.center[0] == selectedRight?.center[0]
+              )
+              .map((element, index) => {
+                return (
+                  <div
+                    key={index}
+                    dir="rtl"
+                    className="bg-green-background w-64 h-28 rounded-lg mb-3 mx-auto"
+                    style={{
+                      border:
+                        selectedLeft.id == element.id &&
+                        selectedLeft.center == element.center &&
+                        "3px solid #419971",
+                    }}
+                  >
+                    <div className="bg-green-background-title rounded-t-lg flex justify-between items-center">
+                      <p className="flex items-center mr-4">{element.title}</p>
+                      <button
+                        onClick={() => {
+                          fetchAndShowImage(element, "left");
+                          setCenter(element.center);
+                          handleLeft(element);
+                        }}
+                      >
+                        <img
+                          src={diffrence}
+                          alt="مقایسه"
+                          className="w-4 h-4 ml-4"
+                          title="مقایسه"
+                        />
+                      </button>
+                      {selectedLeft.id == element.id &&
+                        selectedLeft.center == element.center && (
+                          <button onClick={() => removeImageBySide("left")}>
+                            remove
+                          </button>
+                        )}
+                    </div>
+                    <div className="flex flex-col m-4">
+                      {element.date}
+                      <p>Sentinel-2</p>
+                      <p>
+                        {element.center[0]} - {element.center[1]}
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex flex-col m-4">
-                    {element.date}
-                    <p>Sentinel-2</p>
-                    <p>
-                      {element.center[0]} - {element.center[1]}
-                    </p>
-                  </div>
-                </div>
-              );
-            })
+                );
+              })
           ) : (
             <p className="text-center py-4">تصویر ذخیره شده ای وجود ندارد</p>
           )}
@@ -132,7 +162,13 @@ export default function ThirdButton() {
                 <div
                   key={index}
                   dir="rtl"
-                  className="bg-green-background w-64 h-28 rounded-lg mb-3 mx-auto"
+                  className="bg-green-background w-64  rounded-lg mb-3 mx-auto"
+                  style={{
+                    border:
+                      selectedRight.id == element.id &&
+                      selectedRight.center == element.center &&
+                      "3px solid #419971",
+                  }}
                 >
                   <div className="bg-green-background-title rounded-t-lg flex justify-between items-center">
                     <p className="flex items-center mr-4">{element.title}</p>
@@ -140,6 +176,7 @@ export default function ThirdButton() {
                       onClick={() => {
                         fetchAndShowImage(element, "right");
                         setCenter(element.center);
+                        handleRight(element);
                       }}
                     >
                       <img
@@ -147,11 +184,16 @@ export default function ThirdButton() {
                         alt="مقایسه"
                         className="w-4 h-4 ml-4"
                         title="مقایسه"
-                        onClick={console.log(element.id)}
                       />
                     </button>
+                    {selectedRight.id == element.id &&
+                      selectedRight.center == element.center && (
+                        <button onClick={() => removeImageBySide("right")}>
+                          remove
+                        </button>
+                      )}
                   </div>
-                  <div className="flex flex-col m-4">
+                  <div className="flex flex-col p-4">
                     {element.date}
                     <p>Sentinel-2</p>
                     <p>

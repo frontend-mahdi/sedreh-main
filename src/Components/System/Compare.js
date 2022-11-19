@@ -52,7 +52,7 @@ const Compare = function Compare() {
     height: "100vh",
     longitude: 51.388973,
     latitude: 35.689198,
-    zoom: 11,
+    zoom: 12,
     bearing: 0,
     pitch: 0,
   });
@@ -85,18 +85,35 @@ const Compare = function Compare() {
     return () => map.remove();
   }, []);
   useEffect(() => {
-    if (!!!!titlePolygonLeft && typeof titlePolygonLeft == "string") {
-      const layerCode = titlePolygonLeft.slice(7);
+    const titlePolygonLeftLayerName = titlePolygonLeft.layerName;
+
+    if (
+      !!!!titlePolygonLeftLayerName &&
+      typeof titlePolygonLeftLayerName == "string"
+    ) {
+      const layerCode = titlePolygonLeftLayerName.slice(7);
       const url = `http://138.201.167.227:8080/geoserver/sedreh/wms?service=WMS&version=1.1.0&request=GetMap&layers=sedreh%3A${layerCode}&bbox={bbox-epsg-3857}&width=672&height=768&srs=EPSG:3857&transparent=true&styles=&format=image%2Fpng`;
       setUrlLayerLeft(url);
     }
+    return function cleanup() {
+      console.log("useEffect clean up");
+      setUrlLayerLeft("");
+    };
   }, [titlePolygonLeft]);
   useEffect(() => {
-    if (!!!!titlePolygonRight && typeof titlePolygonRight == "string") {
-      const layerCode = titlePolygonRight.slice(7);
+    const titlePolygonRightLayerName = titlePolygonRight.layerName;
+    if (
+      !!!!titlePolygonRightLayerName &&
+      typeof titlePolygonRightLayerName == "string"
+    ) {
+      const layerCode = titlePolygonRightLayerName.slice(7);
       const url = `http://138.201.167.227:8080/geoserver/sedreh/wms?service=WMS&version=1.1.0&request=GetMap&layers=sedreh%3A${layerCode}&bbox={bbox-epsg-3857}&width=672&height=768&srs=EPSG:3857&transparent=true&styles=&format=image%2Fpng`;
       setUrlLayerRight(url);
     }
+    return function cleanup() {
+      console.log("useEffect clean up");
+      setUrlLayerRight("");
+    };
   }, [titlePolygonRight]);
   return (
     <div id="comparison-container" style={{ ...style, width: "100%" }}>
