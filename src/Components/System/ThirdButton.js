@@ -18,6 +18,7 @@ import {
 } from "../../features/counter/menu";
 import useSavedImages from "./customHooks/useSavedImages";
 import calcCenterHandler from "./utils/calcCenter";
+import { FaTrash, FaTrashAlt } from "react-icons/fa";
 
 export default function ThirdButton() {
   const dispatch = useDispatch();
@@ -33,6 +34,7 @@ export default function ThirdButton() {
   const [saveImages] = useSavedImages();
 
   const setCenter = (centerPolyg) => {
+    console.log("center>>>>>>>>>>>>>", centerPolyg);
     dispatch(getTotalMiddlePolygon(centerPolyg));
   };
   const removeImageBySide = (side) => {
@@ -53,7 +55,7 @@ export default function ThirdButton() {
         image_name: element.name,
         geom: {
           type: "FeatureCollection",
-          features: [JSON.parse(window.localStorage.getItem("currentPolygon"))],
+          features: [element.shape],
         },
       }),
       headers: {
@@ -109,7 +111,7 @@ export default function ThirdButton() {
                   <div
                     key={index}
                     dir="rtl"
-                    className="bg-green-background w-64 h-28 rounded-lg mb-3 mx-auto"
+                    className="bg-green-background w-64 rounded-lg mb-3 mx-auto"
                     style={{
                       border:
                         selectedLeft.id == element.id &&
@@ -117,30 +119,42 @@ export default function ThirdButton() {
                         "3px solid #419971",
                     }}
                   >
-                    <div className="bg-green-background-title rounded-t-lg flex justify-between items-center">
+                    <div className="bg-green-background-title py-1 pb-0 rounded-t-lg flex justify-between items-center">
                       <p className="flex items-center mr-4">{element.title}</p>
-                      <button
-                        onClick={() => {
-                          fetchAndShowImage(element, "left");
-                          setCenter(element.center);
-                          handleLeft(element);
-                        }}
-                      >
-                        <img
-                          src={diffrence}
-                          alt="مقایسه"
-                          className="w-4 h-4 ml-4"
-                          title="مقایسه"
-                        />
-                      </button>
-                      {selectedLeft.id == element.id &&
-                        selectedLeft.center == element.center && (
-                          <button onClick={() => removeImageBySide("left")}>
-                            remove
-                          </button>
-                        )}
+                      <div>
+                        {selectedLeft.id == element.id &&
+                          selectedLeft.center == element.center && (
+                            <button
+                              title="حذف لایه"
+                              className="px-2"
+                              onClick={() => removeImageBySide("left")}
+                            >
+                              <FaTrashAlt fontSize=".97rem" />
+                            </button>
+                          )}
+                        <button
+                          className="disabled:bg-[#00000000] disabled:hover:bg-[#00000000]"
+                          disabled={
+                            selectedLeft.id != 0 &&
+                            (selectedLeft.id != element.id ||
+                              selectedLeft.center != element.center)
+                          }
+                          onClick={() => {
+                            fetchAndShowImage(element, "left");
+                            setCenter(element.center);
+                            handleLeft(element);
+                          }}
+                        >
+                          <img
+                            src={diffrence}
+                            alt="مقایسه"
+                            className="w-4 h-4 ml-4"
+                            title="مقایسه"
+                          />
+                        </button>
+                      </div>
                     </div>
-                    <div className="flex flex-col m-4">
+                    <div className="pt-2 px-2 pb-2">
                       {element.date}
                       <p>Sentinel-2</p>
                       <p>
@@ -162,7 +176,7 @@ export default function ThirdButton() {
                 <div
                   key={index}
                   dir="rtl"
-                  className="bg-green-background w-64  rounded-lg mb-3 mx-auto"
+                  className="bg-green-background w-64 rounded-lg mb-3 mx-auto"
                   style={{
                     border:
                       selectedRight.id == element.id &&
@@ -170,30 +184,42 @@ export default function ThirdButton() {
                       "3px solid #419971",
                   }}
                 >
-                  <div className="bg-green-background-title rounded-t-lg flex justify-between items-center">
+                  <div className="bg-green-background-title py-1 pb-0 rounded-t-lg flex justify-between items-center">
                     <p className="flex items-center mr-4">{element.title}</p>
-                    <button
-                      onClick={() => {
-                        fetchAndShowImage(element, "right");
-                        setCenter(element.center);
-                        handleRight(element);
-                      }}
-                    >
-                      <img
-                        src={diffrence}
-                        alt="مقایسه"
-                        className="w-4 h-4 ml-4"
-                        title="مقایسه"
-                      />
-                    </button>
-                    {selectedRight.id == element.id &&
-                      selectedRight.center == element.center && (
-                        <button onClick={() => removeImageBySide("right")}>
-                          remove
-                        </button>
-                      )}
+                    <div>
+                      {selectedRight.id == element.id &&
+                        selectedRight.center == element.center && (
+                          <button
+                            title="حذف لایه"
+                            className="px-2"
+                            onClick={() => removeImageBySide("right")}
+                          >
+                            <FaTrashAlt fontSize=".97rem" />
+                          </button>
+                        )}
+                      <button
+                        className="disabled:bg-[#00000000] disabled:hover:bg-[#00000000]"
+                        disabled={
+                          selectedRight.id != 0 &&
+                          (selectedRight.id != element.id ||
+                            selectedRight.center != element.center)
+                        }
+                        onClick={() => {
+                          fetchAndShowImage(element, "right");
+                          setCenter(element.center);
+                          handleRight(element);
+                        }}
+                      >
+                        <img
+                          src={diffrence}
+                          alt="مقایسه"
+                          className="w-4 h-4 ml-4"
+                          title="مقایسه"
+                        />
+                      </button>
+                    </div>
                   </div>
-                  <div className="flex flex-col p-4">
+                  <div className="pt-2 px-2 pb-2">
                     {element.date}
                     <p>Sentinel-2</p>
                     <p>

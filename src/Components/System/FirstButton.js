@@ -68,6 +68,7 @@ export default function FirstButton({ closeTabs }) {
           item.id = i + 1;
           item.saved = false;
           item.center = centerPolyg;
+          item.shape = polygon;
         });
         console.log("data", data);
         dispatch(getImagesHandler(data));
@@ -86,7 +87,8 @@ export default function FirstButton({ closeTabs }) {
         image_name: element.name,
         geom: {
           type: "FeatureCollection",
-          features: [JSON.parse(window.localStorage.getItem("currentPolygon"))],
+          // features: [JSON.parse(window.localStorage.getItem("currentPolygon"))],
+          features: [element.shape],
         },
       }),
       headers: {
@@ -112,10 +114,6 @@ export default function FirstButton({ closeTabs }) {
   const titleSubmitLoading = useSelector(
     (state) => state.map.titleSubmitLoading
   );
-
-  const setCenter = (centerPolyg) => {
-    dispatch(getTotalMiddlePolygon(centerPolyg));
-  };
 
   const removeImage = () => {
     dispatch(getPolygonTitle(""));
@@ -151,9 +149,9 @@ export default function FirstButton({ closeTabs }) {
                   <div
                     key={index}
                     dir="rtl"
-                    className="bg-green-background w-64 h-28 rounded-lg mb-3 mx-auto"
+                    className="bg-green-background w-64  rounded-lg mb-3 mx-auto"
                   >
-                    <div className="bg-green-background-title mb-1 mt-1 rounded-t-lg flex justify-between  items-center">
+                    <div className="bg-green-background-title  rounded-t-lg flex justify-between  items-center">
                       <p className="flex items-center mr-4">{element.title}</p>
                       <button>
                         <div
@@ -169,7 +167,7 @@ export default function FirstButton({ closeTabs }) {
                         </div>
                       </button>
                     </div>
-                    <div className="flex flex-col m-4">
+                    <div className="flex flex-col p-2">
                       {element.date}
                       <p>Sentinel-2</p>
                       <p>
