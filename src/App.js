@@ -1,22 +1,37 @@
-import React from "react";
-import "./App.css";
-import System from "./Components/System/System";
-import Data from "./Components/Data";
-import Compare from "./Components/System/Compare";
-import Info from "./Components/System/Info";
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import SavePolygon from "./Components/System/SavePolygon";
-
+import Info from "./info/Info";
+// import "./app.css";
+import MapApp from "./map/MapApp";
+import { saveImageHandler, savePolygonHandler } from "./redux/menu";
 const App = () => {
-  const buttonCompare = useSelector((state) => state.map.buttonCompare);
   const infoButton = useSelector((state) => state.map.infoButton);
-
-  return (
-    <>
-      {/* <SavePolygon /> */}
-      <div>{infoButton ? <Info /> : <System />}</div>
-    </>
-  );
+  const dispatch = useDispatch();
+  // set initial value of savedPolygons and savedImages
+  useEffect(() => {
+    return () => {
+      if (!!!!JSON.parse(window.localStorage.getItem("savedPictures"))) {
+        dispatch(
+          saveImageHandler(
+            JSON.parse(window.localStorage.getItem("savedPictures"))
+          )
+        );
+      }
+    };
+  }, []);
+  useEffect(() => {
+    return () => {
+      if (!!!!JSON.parse(window.localStorage.getItem("savedPolygons"))) {
+        dispatch(
+          savePolygonHandler(
+            JSON.parse(window.localStorage.getItem("savedPolygons"))
+          )
+        );
+      }
+    };
+  }, []);
+  return <>{infoButton ? <Info /> : <MapApp />}</>;
 };
 
 export default App;
