@@ -44,18 +44,13 @@ export default function TabNum1({ closeTabs }) {
   useEffect(() => {
     if (
       JSON.parse(window.localStorage.getItem("currentPolygon"))?.length > 0 &&
-      polygon.length != 0
+      polygon?.length != 0
     )
       setDisableSubmit(false);
     else setDisableSubmit(true);
 
     console.log("polygon", polygon);
   }, [polygon]);
-  useEffect(() => {
-    console.log(" JSON.parse(window.localStorage.getItem())", [
-      JSON.parse(window.localStorage.getItem("currentPolygon")),
-    ]);
-  }, []);
 
   const getImagesCollactionHandler = function () {
     dispatch(getSubmitLoading(true));
@@ -141,18 +136,18 @@ export default function TabNum1({ closeTabs }) {
         <div className="flex flex-row text-center w-full py-2">
           <div
             className="w-1/2 rounded-tl-2xl pb-3 pt-2"
-            style={{ borderBottom: !isShownButton && "4px solid #95DD91" }}
-          >
-            <button className="" onClick={handleClickButton}>
-              افزودن تصویر
-            </button>
-          </div>
-          <div
-            className="w-1/2 rounded-tl-2xl pb-3 pt-2"
             style={{ borderBottom: isShownButton && "4px solid #95DD91" }}
           >
             <button className="" onClick={handleClickButton}>
               تصاویر ذخیره شده
+            </button>
+          </div>
+          <div
+            className="w-1/2 rounded-tl-2xl pb-3 pt-2"
+            style={{ borderBottom: !isShownButton && "4px solid #95DD91" }}
+          >
+            <button className="" onClick={handleClickButton}>
+              افزودن تصویر
             </button>
           </div>
         </div>

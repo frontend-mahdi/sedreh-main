@@ -32,6 +32,7 @@ export default function CloseLayerPopup(props) {
         <div
           className="px-4 py-2 rounded-sm text-white1 flex justify-between items-baseline "
           style={{ width: "4rem !important" }}
+          dir="rtl"
         >
           <span
             className=" cursor-pointer"

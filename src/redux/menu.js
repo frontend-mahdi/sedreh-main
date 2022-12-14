@@ -3,8 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   fetchedImages: [],
   fetchedImagesEmpty: false,
-  saveImages: [],
-  savedPolygons: [],
+  saveImages: JSON.parse(window.localStorage.getItem("savedPictures")) || [],
+  savedPolygons: JSON.parse(window.localStorage.getItem("savedPolygons")) || [],
   stagedSavedImage: "",
 };
 
@@ -24,7 +24,6 @@ export const counterSlice = createSlice({
     stagedSavedImageHandler: (state, action) => {
       state.stagedSavedImage = action.payload;
     },
-
 
     savePolygonHandler: (state, action) => {
       state.savedPolygons = [...state.savedPolygons, ...action.payload];

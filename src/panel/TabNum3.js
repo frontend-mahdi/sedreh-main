@@ -77,15 +77,15 @@ export default function TabNum3() {
       <div className="flex flex-row text-center w-full py-2">
         <div
           className="w-1/2 rounded-tl-2xl pb-3 pt-2"
-          style={{ borderBottom: !isShownButton && "4px solid #95DD91" }}
-        >
-          <button onClick={handleClickButton}>تصویر سمت راست</button>
-        </div>
-        <div
-          className="w-1/2 rounded-tl-2xl pb-3 pt-2"
           style={{ borderBottom: isShownButton && "4px solid #95DD91" }}
         >
           <button onClick={handleClickButton}>تصویر سمت چپ</button>
+        </div>
+        <div
+          className="w-1/2 rounded-tl-2xl pb-3 pt-2"
+          style={{ borderBottom: !isShownButton && "4px solid #95DD91" }}
+        >
+          <button onClick={handleClickButton}>تصویر سمت راست</button>
         </div>
       </div>
 
