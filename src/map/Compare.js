@@ -23,7 +23,7 @@ const Compare = function Compare() {
   const navStyle = {
     position: "absolute",
     padding: "10px",
-    top: 150,
+    top: 90,
     left: 0,
   };
 

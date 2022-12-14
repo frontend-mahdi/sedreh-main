@@ -33,8 +33,8 @@ setRTLTextPlugin(
 
 const navStyle = {
   position: "absolute",
-  padding: "39px",
-  top: 50,
+  padding: "10px",
+  top: 90,
   left: 0,
 };
 
