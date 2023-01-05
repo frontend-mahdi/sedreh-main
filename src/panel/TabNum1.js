@@ -21,6 +21,7 @@ import usePolygonCenter from "./../customHooks/usePolygonCenter";
 import DataPicker from "./utils/DataPicker";
 import RightPopup from "./utils/RightPopup";
 import { API } from "../apiUrl";
+import { fetchApi } from "../handlers/axiosHandler";
 
 export default function TabNum1({ closeTabs }) {
   const fetchedImages = useSelector((state) => state.menu.fetchedImages);
@@ -29,7 +30,9 @@ export default function TabNum1({ closeTabs }) {
   const fetchedImagesEmpty = useSelector(
     (state) => state.menu.fetchedImagesEmpty
   );
-
+  useEffect(() => {
+    console.log("fetchedImages", fetchedImages);
+  }, [fetchedImages]);
   // custom hooks
   const [centerPolyg] = usePolygonCenter();
   const [saveImages] = useSavedImages();
@@ -51,8 +54,43 @@ export default function TabNum1({ closeTabs }) {
 
     console.log("polygon", polygon);
   }, [polygon]);
+  const getImagesCollactionHandler1 = async () => {
+    dispatch(getSubmitLoading(true));
+    const { data, status, statusText } = await fetchApi(
+      "/api/get-image-collection/",
+      "POST",
+      JSON.stringify({
+        start: window.localStorage.getItem("start"),
+        end: window.localStorage.getItem("end"),
+        geom: {
+          type: "FeatureCollection",
+          features: [polygon],
+        },
+      })
+    );
+    console.log("data", data);
+    if (status == 200) {
+      if (data?.length == 0) dispatch(fetchImagesEmptyHandler(true));
+      data.forEach((item, i) => {
+        item.id = i + 1;
+        item.saved = false;
+        item.center = centerPolyg;
+        item.shape = polygon;
+      });
+      dispatch(getImagesHandler(data));
+    }
+    dispatch(getSubmitLoading(false));
+  };
 
   const getImagesCollactionHandler = function () {
+    console.log("body", {
+      start: window.localStorage.getItem("start"),
+      end: window.localStorage.getItem("end"),
+      geom: {
+        type: "FeatureCollection",
+        features: [polygon],
+      },
+    });
     dispatch(getSubmitLoading(true));
     fetch(`${API}/api/get-image-collection/`, {
       method: "POST",
@@ -78,7 +116,7 @@ export default function TabNum1({ closeTabs }) {
           item.center = centerPolyg;
           item.shape = polygon;
         });
-        console.log("data", data);
+        console.table("data", data);
         dispatch(getImagesHandler(data));
         dispatch(getSubmitLoading(false));
       })

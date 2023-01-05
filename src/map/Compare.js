@@ -119,11 +119,13 @@ const Compare = function Compare() {
       <div
         style={{
           position: "fixed",
+
           zIndex: "999",
           left: "50vw",
           width: "5px",
           height: "100vh",
-          backgroundColor: "#419971",
+          background:
+            "linear-gradient(0deg, rgba(65,153,113,0) 0%, rgba(65,153,113,1) 20%,rgba(65,153,113,1) 80%, rgba(65,153,113,0) 100%)",
         }}
       ></div>
       <ReactMapGL

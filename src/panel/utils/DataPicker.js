@@ -11,8 +11,8 @@ export default function DataPicker() {
     window.localStorage.setItem("end", endDate.toISOString().split("T")[0]);
   }, []);
   return (
-    <div className="data-picker">
-      <div className="mb-2 flex">
+    <div className="data-picker ">
+      <div className="mb-2 flex" dir="rtl">
         <p className="text-Seventy flex justify-center items-center mb-2 ml-4 w-1/2">
           مبدا زمانی
         </p>
@@ -31,9 +31,10 @@ export default function DataPicker() {
           showTodayButton={true}
           timePicker={true}
           inputJalaaliFormat="jYYYY/jM/jD"
+          calendarStyles={{ zIndex: "999" }}
         />
       </div>
-      <div className="flex">
+      <div className="flex" dir="rtl">
         <p className="text-Seventy flex justify-center items-center mb-2 ml-4 w-1/2">
           مقصد زمانی
         </p>
@@ -52,6 +53,7 @@ export default function DataPicker() {
           showTodayButton={true}
           timePicker={true}
           inputJalaaliFormat="jYYYY/jM/jD"
+          calendarStyles={{ zIndex: "999" }}
         />
       </div>
     </div>

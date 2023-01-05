@@ -30,7 +30,7 @@ export default function CloseLayerPopup(props) {
     >
       {(close) => (
         <div
-          className="px-4 py-2 rounded-sm text-white1 flex justify-between items-baseline "
+          className="px-4 py-2 rounded-sm text-white1 flex justify-between items-center "
           style={{ width: "4rem !important" }}
           dir="rtl"
         >
@@ -41,11 +41,11 @@ export default function CloseLayerPopup(props) {
               removeImage();
             }}
           >
-            <FaTimes className="align-middle" />
+            <FaTimes />
           </span>
-          <div className=" text-center  ">
+          {/* <div className=" text-center  ">
             <p className="cursor-default  px-auto">تصویر شماره {id}</p>
-          </div>
+          </div> */}
           <div className=" text-center  ">
             <p className="cursor-default  px-auto">
               {title || savedImageTitle}

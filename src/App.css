@@ -215,7 +215,9 @@ button.close.text-white {
   margin-top: 100px;
   border-radius: 0.5rem;
 }
-
+.tether-element.tether-element-attached-top.tether-element-attached-center.tether-target-attached-bottom.tether-target-attached-center.tether-enabled {
+  margin-left: 0px !important;
+}
 .mapboxgl-ctrl-geocoder--input {
   color: #ededed !important;
   font-family: Vazir !important;

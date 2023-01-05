@@ -159,7 +159,9 @@ export default function Mapbox() {
   };
 
   const onSelect = (selected) => {
+    console.time("time");
     console.log("onSelect selected", selected);
+    console.timeEnd("time");
 
     setSelectedFeatureIndex(selected.selectedFeatureIndex);
   };
