@@ -36,16 +36,9 @@ export default function Navbar() {
         >
           <p> راهنمای سامانه </p> <img src={message} alt="" className="ml-2" />
         </button>
-        <div>
-          <RightPopupConnection
-            btn={
-              <button className="guide bg-black1-rgba text-ED rounded-lg flex justify-center items-center w-28 h-10">
-                <p> ارتباط با ما </p>{" "}
-                <img src={device} alt="" className="ml-2" />
-              </button>
-            }
-          />{" "}
-        </div>{" "}
+        <button className="guide bg-black1-rgba text-ED rounded-lg flex justify-center items-center w-28 h-10">
+          <p> ارتباط با ما </p> <img src={device} alt="" className="ml-2" />
+        </button>
       </div>{" "}
       <div
         className="search-bar text-ED rounded-lg w-1/3 h-11 flex justify-start items-center"

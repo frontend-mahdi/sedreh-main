@@ -360,3 +360,10 @@ input.mapboxgl-ctrl-geocoder--input {
   background: hsl(117, 53%, 78%);
   cursor: pointer;
 }
+.m_slide {
+  /* display: none; */
+}
+/* .m_slide.m_active {
+  display: block !important;
+  transition: display 0.3s ease-in-out;
+} */
