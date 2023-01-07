@@ -1,7 +1,5 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination, Navigation } from "swiper";
 
 import img0 from "./../assets/img/info/p0.png";
 import img1 from "./../assets/img/info/p1.png";

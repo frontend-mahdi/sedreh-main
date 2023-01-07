@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { SlPicture } from "react-icons/sl";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -9,6 +9,9 @@ import {
   getPolygonTitleLeft,
 } from "./../redux/map";
 import { fetchImagesEmptyHandler, getImagesHandler } from "./../redux/menu";
+import persian from "react-date-object/calendars/persian";
+import persian_fa from "react-date-object/locales/persian_fa";
+import { DateObject } from "react-multi-date-picker";
 
 import BoxLoading from "react-loadingg/lib/BoxLoading";
 
@@ -44,16 +47,46 @@ export default function TabNum1({ closeTabs }) {
   };
   const [isShownButton, setIsShownButton] = React.useState(false);
   const [disableSubmit, setDisableSubmit] = React.useState(true);
+  // =====
+  const [startDate, setStartDate] = useState(null);
+  const [startDateInput, setStartDateInput] = useState(null);
+  // =====
+  const [endDate, setEndDate] = useState(null);
+  const [endDateInput, setEndDateInput] = useState(null);
+  const [initialEndDateInput, setInitialEndDateInput] = useState(null);
+
   useEffect(() => {
     if (
       JSON.parse(window.localStorage.getItem("currentPolygon"))?.length > 0 &&
-      polygon?.length != 0
+      polygon?.length != 0 &&
+      !!startDate &&
+      !!endDate
     )
       setDisableSubmit(false);
     else setDisableSubmit(true);
 
     console.log("polygon", polygon);
-  }, [polygon]);
+  }, [polygon, startDate, endDate]);
+  useEffect(() => {
+    console.log("start date", startDate);
+    console.log("end date", endDate);
+  }, [startDate, endDate]);
+  useEffect(() => {
+    const sDate = new DateObject({
+      // 1400-09-12
+      date: "1400-07-12",
+      format: "YYYY-MM-DD",
+      calendar: persian,
+      locale: persian_fa,
+    });
+    const eDate = new DateObject({
+      // 1400-09-12
+      date: "1400-09-12",
+      format: "YYYY-MM-DD",
+      calendar: persian,
+      locale: persian_fa,
+    });
+  }, []);
   const getImagesCollactionHandler1 = async () => {
     dispatch(getSubmitLoading(true));
     const { data, status, statusText } = await fetchApi(
@@ -84,8 +117,8 @@ export default function TabNum1({ closeTabs }) {
 
   const getImagesCollactionHandler = function () {
     console.log("body", {
-      start: window.localStorage.getItem("start"),
-      end: window.localStorage.getItem("end"),
+      start: startDate,
+      end: endDate,
       geom: {
         type: "FeatureCollection",
         features: [polygon],
@@ -95,8 +128,8 @@ export default function TabNum1({ closeTabs }) {
     fetch(`${API}/api/get-image-collection/`, {
       method: "POST",
       body: JSON.stringify({
-        start: window.localStorage.getItem("start"),
-        end: window.localStorage.getItem("end"),
+        start: startDate,
+        end: endDate,
         geom: {
           type: "FeatureCollection",
           features: [polygon],
@@ -167,7 +200,15 @@ export default function TabNum1({ closeTabs }) {
     fetchAndShowImageHandler(todo);
     closeTabs();
   };
-
+  const convertGeorgToPersian = (date) => {
+    return new DateObject({
+      // 1400-09-12
+      date,
+      format: "YYYY-MM-DD",
+    })
+      .convert(persian, persian_fa)
+      .format();
+  };
   return (
     <>
       <div className="flex flex-col h-full">
@@ -217,7 +258,7 @@ export default function TabNum1({ closeTabs }) {
                       </button>
                     </div>
                     <div className="flex flex-col p-2">
-                      {element.date}
+                      {/* {convertGeorgToPersian(element.date)} */}
                       <p>Sentinel-2</p>
                       <p>
                         {element?.center[0]} - {element?.center[1]}
@@ -237,12 +278,69 @@ export default function TabNum1({ closeTabs }) {
           >
             <div className="flex flex-col items-center ">
               <p className="mb-6">انتخاب تاریخ تصویر</p>
-              <DataPicker />
+              <div className="data-picker ">
+                <div className="mb-2 flex pl-6" dir="rtl">
+                  <p className="text-Seventy flex justify-center items-center mb-2 ml-4 w-1/2">
+                    مبدا زمانی
+                  </p>
+
+                  <DataPicker
+                    onChange={(e) => {
+                      const date = new DateObject({
+                        // 1400-09-12
+                        date: e
+                          .format("YYYY-MM-DD")
+                          .replace(/[۰-۹]/g, (d) => "۰۱۲۳۴۵۶۷۸۹".indexOf(d)),
+                        format: "YYYY-MM-DD",
+                        calendar: persian,
+                        locale: persian_fa,
+                      });
+                      setStartDateInput(date);
+                      setStartDate(
+                        e
+                          .convert()
+                          .format("YYYY-MM-DD")
+                          .replace(/[۰-۹]/g, (d) => "۰۱۲۳۴۵۶۷۸۹".indexOf(d))
+                      );
+                    }}
+                    value={startDateInput}
+                    placeholder="23 مهر 1400"
+                  />
+                </div>
+                <div className="flex pl-6" dir="rtl">
+                  <p className="text-Seventy flex justify-center items-center mb-2 ml-4 w-1/2">
+                    مقصد زمانی
+                  </p>
+                  <DataPicker
+                    onChange={(e) => {
+                      const date = new DateObject({
+                        // 1400-09-12
+                        date: e
+                          .format("YYYY-MM-DD")
+                          .replace(/[۰-۹]/g, (d) => "۰۱۲۳۴۵۶۷۸۹".indexOf(d)),
+                        format: "YYYY-MM-DD",
+                        calendar: persian,
+                        locale: persian_fa,
+                      });
+                      setEndDateInput(date);
+                      setEndDate(
+                        e
+                          .convert()
+                          .format("YYYY-MM-DD")
+                          .replace(/[۰-۹]/g, (d) => "۰۱۲۳۴۵۶۷۸۹".indexOf(d))
+                      );
+                    }}
+                    value={endDateInput}
+                    placeholder="23 دی 1400"
+                  />
+                </div>
+              </div>
+
               {titleSubmitLoading ? (
                 <BoxLoading color="#95DD91" />
               ) : (
                 <button
-                  className="bg-primary3 w-3/4 py-2 hover:bg-primary mx-4 rounded-lg  mt-5 text-black1"
+                  className="bg-primary3 w-3/4 py-2 hover:bg-primary mx-4 disabled:bg-Seventy rounded-lg  mt-5 text-black1"
                   onClick={getImagesCollactionHandler}
                   disabled={disableSubmit}
                 >
@@ -258,7 +356,7 @@ export default function TabNum1({ closeTabs }) {
                 fetchedImages.map((todo, index) => (
                   <div key={index}>
                     <div className="mt-3 px-4 py-2">
-                      <p>{todo.date}</p>
+                      <p>{convertGeorgToPersian(todo.date)}</p>
                       <p>Sentinel-2</p>
                       <p>
                         {todo.center[0]} - {todo.center[1]}

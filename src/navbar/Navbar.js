@@ -44,7 +44,9 @@ export default function Navbar() {
         className="search-bar text-ED rounded-lg w-1/3 h-11 flex justify-start items-center"
         dir="rtl"
       ></div>{" "}
-      <img src={logobl} alt="logo" className="logo" />
+      <a href="https://sedrehai.ir" target="_blank">
+        <img src={logobl} alt="logo" className="logo" />
+      </a>
     </div>
   );
 }
