@@ -237,8 +237,8 @@ export default function Mapbox() {
 
   const changeCursor = (state) => {
     const layer = document.querySelector("div.overlays");
-    if (state == "add") layer.classList.add("cursor-pointer");
-    else layer.classList.remove("cursor-pointer");
+    if (state == "add") layer.classList.add("cursor-crosshair");
+    else layer.classList.remove("cursor-crosshair");
   };
   return (
     <div>

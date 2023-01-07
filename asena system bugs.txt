@@ -2,4 +2,5 @@
 +date input location
 +compare handle
 info
+add contact us
 +logo link to next App
