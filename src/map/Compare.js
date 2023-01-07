@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useSelector } from "react-redux";
 
-import ReactMapGL from "react-map-gl";
+import ReactMapGL, { NavigationControl } from "react-map-gl";
 import MapboxCompare from "mapbox-gl-compare";
-
 import { Layer, Source } from "react-map-gl";
 import { GEO_API } from "../apiUrl";
+// import "mapbox-gl-compare/dist/mapbox-gl-compare.css";
+import "mapbox-gl-compare/style.css";
 
 const MAPBOX_TOKEN =
   "pk.eyJ1IjoiZmFrZXVzZXJnaXRodWIiLCJhIjoiY2pwOGlneGI4MDNnaDN1c2J0eW5zb2ZiNyJ9.mALv0tCpbYUPtzT7YysA2g";
@@ -83,6 +84,7 @@ const Compare = function Compare() {
 
     return () => map.remove();
   }, []);
+
   useEffect(() => {
     const titlePolygonLeftLayerName = titlePolygonLeft.layerName;
 
@@ -116,7 +118,7 @@ const Compare = function Compare() {
   }, [titlePolygonRight]);
   return (
     <div id="comparison-container" style={{ ...style, width: "100%" }}>
-      <div
+      {/* <div
         style={{
           position: "fixed",
 
@@ -127,21 +129,20 @@ const Compare = function Compare() {
           background:
             "linear-gradient(0deg, rgba(65,153,113,0) 0%, rgba(65,153,113,1) 20%,rgba(65,153,113,1) 80%, rgba(65,153,113,0) 100%)",
         }}
-      ></div>
+      ></div> */}
       <ReactMapGL
         ref={beforeRef}
         {...viewport}
         width="100%"
         height="100%"
         // onViewportChange={(viewport) => handleViewportChange(viewport)}
-        onInteractionStateChange={(onInteractionStateChange) =>
-          console.log("onInteractionStateChange left", onInteractionStateChange)
-        }
         style={style}
         mapStyle="mapbox://styles/mapbox/streets-v11"
         mapboxApiAccessToken={MAPBOX_TOKEN}
+        // dragPan={true}
         dragPan={true}
-        scrollZoom={{ smooth: false, speed: 1 }}
+        scrollZoom={{ smooth: true, speed: 1 }}
+        key={1}
 
         // mapOptions={{ interactive: false }}
       >
@@ -150,7 +151,7 @@ const Compare = function Compare() {
           className="xyz"
           captureScroll={true}
         /> */}
-        {/* <div className="nav " style={navStyle}>
+        {/* <div className="nav" style={navStyle}>
           <NavigationControl
             onViewportChange={(nextViewport) => setViewport(nextViewport)}
           />
@@ -190,18 +191,13 @@ const Compare = function Compare() {
         width="100%"
         height="100%"
         onViewportChange={(viewport) => handleViewportChange(viewport)}
-        onInteractionStateChange={(onInteractionStateChange) =>
-          console.log(
-            "onInteractionStateChange right",
-            onInteractionStateChange
-          )
-        }
         style={style}
         mapStyle="mapbox://styles/mapbox/streets-v11"
         mapboxApiAccessToken={MAPBOX_TOKEN}
         dragPan={true}
         // scrollZoom={true}
-        scrollZoom={{ smooth: false, speed: 1 }}
+        key={2}
+        scrollZoom={{ smooth: true, speed: 1 }}
 
         // mapOptions={{ interactive: false }}
       >

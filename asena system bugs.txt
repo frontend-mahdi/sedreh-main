@@ -1,5 +1,5 @@
 +start end date
 +date input location
-compare handle
++compare handle
 info
 +logo link to next App
