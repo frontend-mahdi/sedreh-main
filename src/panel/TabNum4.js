@@ -3,6 +3,7 @@ import { TfiDownload } from "react-icons/tfi";
 import { API } from "../apiUrl";
 import useSavedImages from "./../customHooks/useSavedImages";
 import { BoxLoading } from "react-loadingg";
+import { convertGeorgToPersian } from "./utils/convertDate";
 export default function TabNum4() {
   const [saveImages] = useSavedImages();
   const [url1, setUrl1] = useState("");
@@ -144,7 +145,7 @@ export default function TabNum4() {
                   </button>
                 </div>
                 <div className="flex flex-col m-4">
-                  {element.date}
+                  <p>{convertGeorgToPersian(element.date)}</p>
                   <p>Sentinel-2</p>
                   <p>
                     {element?.center[0]} - {element?.center[1]}

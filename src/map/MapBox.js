@@ -21,12 +21,13 @@ import {
 } from "react-map-gl-draw";
 import Geocoder from "react-map-gl-geocoder";
 
-import { getTotalMiddlePolygon } from "./../redux/map";
+import { getTotalMiddlePolygon, setCurrentPoly } from "./../redux/map";
 
 import usePolygonCenter from "../customHooks/usePolygonCenter";
 import CloseLayerPopup from "./utils/CloseLayerPopup";
 import SavePolygon from "./utils/SavePolygon";
 import { GEO_API } from "../apiUrl";
+import { fetchImagesEmptyHandler } from "../redux/menu";
 setRTLTextPlugin(
   "https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-rtl-text/v0.2.3/mapbox-gl-rtl-text.js"
 );
@@ -82,7 +83,13 @@ export default function Mapbox() {
   const mapRef = useRef();
   const editorRef = useRef();
   const dispatch = useDispatch();
-
+  useEffect(() => {
+    setPolygonAdded(false);
+    setIsShown(false);
+    setClearMap(true);
+    setCurrentPolygon([]);
+    dispatch(setCurrentPoly(false));
+  }, []);
   useEffect(() => {
     if (!!!!centerPolyg && centerPolyg.length > 0) {
       dispatch(getTotalMiddlePolygon(centerPolyg));
@@ -139,6 +146,7 @@ export default function Mapbox() {
       //  ||payload.editType == "movePosition"
     ) {
       setCurrentPolygon(payload.data[0]);
+      dispatch(setCurrentPoly(true));
     }
     if (payload.editType === "getFeatures") {
       setMode(new EditingMode());
@@ -151,7 +159,9 @@ export default function Mapbox() {
     changeCursor("none");
     setIsShown(false);
     setClearMap(true);
-
+    setCurrentPolygon([]);
+    dispatch(setCurrentPoly(false));
+    dispatch(fetchImagesEmptyHandler(true));
     console.log("editorRef.current", editorRef.current);
     if (selectedFeatureIndex >= 0) {
       editorRef.current.deleteFeatures(selectedFeatureIndex);

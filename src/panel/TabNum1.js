@@ -8,7 +8,11 @@ import {
   getPolygonTitleRight,
   getPolygonTitleLeft,
 } from "./../redux/map";
-import { fetchImagesEmptyHandler, getImagesHandler } from "./../redux/menu";
+import {
+  deleteImageHandler,
+  fetchImagesEmptyHandler,
+  getImagesHandler,
+} from "./../redux/menu";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
 import { DateObject } from "react-multi-date-picker";
@@ -23,8 +27,11 @@ import usePolygonCenter from "./../customHooks/usePolygonCenter";
 
 import DataPicker from "./utils/DataPicker";
 import RightPopup from "./utils/RightPopup";
+import formatSquare from "./../assets/img/format-square.svg";
 import { API } from "../apiUrl";
 import { fetchApi } from "../handlers/axiosHandler";
+import { convertGeorgToPersian } from "./utils/convertDate";
+import { FaTrashAlt } from "react-icons/fa";
 
 export default function TabNum1({ closeTabs }) {
   const fetchedImages = useSelector((state) => state.menu.fetchedImages);
@@ -45,6 +52,8 @@ export default function TabNum1({ closeTabs }) {
   const handleClickButton = () => {
     setIsShownButton((current) => !current);
   };
+  const currentPoly = useSelector((state) => state.map.currentPoly);
+
   const [isShownButton, setIsShownButton] = React.useState(false);
   const [disableSubmit, setDisableSubmit] = React.useState(true);
   // =====
@@ -54,7 +63,9 @@ export default function TabNum1({ closeTabs }) {
   const [endDate, setEndDate] = useState(null);
   const [endDateInput, setEndDateInput] = useState(null);
   const [initialEndDateInput, setInitialEndDateInput] = useState(null);
-
+  const _deleteImageHandler = (index) => {
+    dispatch(deleteImageHandler(index));
+  };
   useEffect(() => {
     if (
       JSON.parse(window.localStorage.getItem("currentPolygon"))?.length > 0 &&
@@ -200,15 +211,7 @@ export default function TabNum1({ closeTabs }) {
     fetchAndShowImageHandler(todo);
     closeTabs();
   };
-  const convertGeorgToPersian = (date) => {
-    return new DateObject({
-      // 1400-09-12
-      date,
-      format: "YYYY-MM-DD",
-    })
-      .convert(persian, persian_fa)
-      .format();
-  };
+
   return (
     <>
       <div className="flex flex-col h-full">
@@ -243,9 +246,8 @@ export default function TabNum1({ closeTabs }) {
                   >
                     <div className="bg-primary-background-title  rounded-t-lg flex justify-between  items-center">
                       <p className="flex items-center mr-4">{element.title}</p>
-                      <button>
-                        <div
-                          className="w-4 h-4 ml-4"
+                      <div className="flex flex-row gap-2 pl-3">
+                        <button
                           title="نمایش تصویر"
                           onClick={() => {
                             removeImage();
@@ -254,8 +256,14 @@ export default function TabNum1({ closeTabs }) {
                           }}
                         >
                           <SlPicture />
-                        </div>
-                      </button>
+                        </button>
+                        <button
+                          title="حذف تصویر"
+                          onClick={() => _deleteImageHandler(element.id)}
+                        >
+                          <FaTrashAlt />
+                        </button>
+                      </div>
                     </div>
                     <div className="flex flex-col p-2">
                       {/* {convertGeorgToPersian(element.date)} */}
@@ -276,11 +284,11 @@ export default function TabNum1({ closeTabs }) {
             className="flex flex-col items-stretch justify-between py-4 "
             style={{ height: "calc(100% - 52px)" }}
           >
-            <div className="flex flex-col items-center ">
+            <div className="flex flex-col items-center mx-2 ">
               <p className="mb-6">انتخاب تاریخ تصویر</p>
               <div className="data-picker ">
                 <div className="mb-2 flex pl-6" dir="rtl">
-                  <p className="text-Seventy flex justify-center items-center mb-2 ml-4 w-1/2">
+                  <p className="text-Seventy flex justify-center items-center mb-2 ml-4 w-1/2 whitespace-nowrap">
                     مبدا زمانی
                   </p>
 
@@ -308,7 +316,7 @@ export default function TabNum1({ closeTabs }) {
                   />
                 </div>
                 <div className="flex pl-6" dir="rtl">
-                  <p className="text-Seventy flex justify-center items-center mb-2 ml-4 w-1/2">
+                  <p className="text-Seventy flex justify-center items-center mb-2 ml-4 w-1/2 whitespace-nowrap">
                     مقصد زمانی
                   </p>
                   <DataPicker
@@ -340,9 +348,9 @@ export default function TabNum1({ closeTabs }) {
                 <BoxLoading color="#95DD91" />
               ) : (
                 <button
-                  className="bg-primary3 w-3/4 py-2 hover:bg-primary mx-4 disabled:bg-Seventy rounded-lg  mt-5 text-black1"
+                  className="bg-primary3 w-full mx-1 py-2 hover:bg-primary  disabled:bg-Seventy rounded-lg  mt-5 text-black1"
                   onClick={getImagesCollactionHandler}
-                  disabled={disableSubmit}
+                  disabled={!currentPoly || !endDate || !startDate}
                 >
                   ثبت
                 </button>
@@ -350,9 +358,20 @@ export default function TabNum1({ closeTabs }) {
             </div>
 
             <div className="w-full  overflow-auto h-4/5" dir="rtl">
+              {!currentPoly && (
+                <div className="mt-6">
+                  <center>
+                    <img src={formatSquare} />
+                  </center>
+                  <p className="text-center px-4">
+                    برای شروع لطفا ناحیه مد نظر خود را با ابزار پلیگان ترسیم
+                    کنید
+                  </p>
+                </div>
+              )}
               {titleSubmitLoading ? (
                 <BoxLoading color="#95DD91" />
-              ) : fetchedImages.length > 0 ? (
+              ) : fetchedImages.length > 0 && currentPoly ? (
                 fetchedImages.map((todo, index) => (
                   <div key={index}>
                     <div className="mt-3 px-4 py-2">
@@ -379,7 +398,8 @@ export default function TabNum1({ closeTabs }) {
                   </div>
                 ))
               ) : (
-                fetchedImagesEmpty && (
+                fetchedImagesEmpty &&
+                currentPoly && (
                   <p className="text-center py-4">
                     تصویری در این بازه زمانی پیدا نشد
                   </p>

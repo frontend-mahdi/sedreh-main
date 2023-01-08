@@ -11,6 +11,7 @@ import {
 import useSavedImages from "./../customHooks/useSavedImages";
 import diffrence from "./../assets/img/diffrence.png";
 import { API } from "../apiUrl";
+import { convertGeorgToPersian } from "./utils/convertDate";
 
 export default function TabNum3() {
   const dispatch = useDispatch();
@@ -145,7 +146,8 @@ export default function TabNum3() {
                       </div>
                     </div>
                     <div className="pt-2 px-2 pb-2">
-                      {element.date}
+                      <p>{convertGeorgToPersian(element.date)}</p>
+
                       <p>Sentinel-2</p>
                       <p>
                         {element?.center[0]} - {element?.center[1]}
@@ -210,7 +212,8 @@ export default function TabNum3() {
                     </div>
                   </div>
                   <div className="pt-2 px-2 pb-2">
-                    {element.date}
+                    <p>{convertGeorgToPersian(element.date)}</p>
+
                     <p>Sentinel-2</p>
                     <p>
                       {element?.center[0]} - {element?.center[1]}

@@ -6,10 +6,10 @@ const useSavedImages = () => {
   const _saveImages = useSelector((state) => state.menu.saveImages);
 
   useEffect(() => {
-    if (_saveImages.length > 0) {
-      setSavedImages(_saveImages);
-      window.localStorage.setItem("savedPictures", JSON.stringify(_saveImages));
-    }
+    // if (_saveImages.length > 0) {
+    setSavedImages(_saveImages);
+    window.localStorage.setItem("savedPictures", JSON.stringify(_saveImages));
+    // }
   }, [_saveImages]);
   return [saveImages];
 };

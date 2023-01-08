@@ -6,13 +6,14 @@ const useSavedPolygons = () => {
   const _savedPolygons = useSelector((state) => state.menu.savedPolygons);
 
   useEffect(() => {
-    if (_savedPolygons.length > 0) {
-      setSavedPolygons(_savedPolygons);
-      window.localStorage.setItem(
-        "savedPolygons",
-        JSON.stringify(_savedPolygons)
-      );
-    }
+    console.log("savedPolygons", _savedPolygons);
+    // if (_savedPolygons.length > 0) {
+    setSavedPolygons(_savedPolygons);
+    window.localStorage.setItem(
+      "savedPolygons",
+      JSON.stringify(_savedPolygons)
+    );
+    // }
   }, [_savedPolygons]);
   return [savedPolygons];
 };

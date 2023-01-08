@@ -39,6 +39,7 @@ const initialState = {
   buttonCompare: false,
   urlCompare: [],
   infoButton: false,
+  currentPoly: false,
 };
 
 export const counterSlice = createSlice({
@@ -87,6 +88,9 @@ export const counterSlice = createSlice({
     setPolyOnMap: (state, action) => {
       state.savedPolyOnMap = [action.payload];
     },
+    setCurrentPoly: (state, action) => {
+      state.currentPoly = action.payload;
+    },
   },
 });
 
@@ -105,6 +109,7 @@ export const {
   getPolygonTitleLeft,
   getPolygonTitleRight,
   updatePolygonList,
+  setCurrentPoly,
 } = counterSlice.actions;
 
 export default counterSlice.reducer;
